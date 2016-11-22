@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/all_products_relativelayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:longClickable="true">
+    <!-- PRODUCT -->
+    <TextView
+        android:id="@+id/list_item_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="8dp"
+        android:textSize="18sp"
+        android:text="placeholdertext"
+        android:textStyle="bold"
+        android:longClickable="true"/>
+
+    <!-- COUNT -->
+    <TextView
+        android:id="@+id/list_item_count_final"
+        android:text="11"
+        android:textAlignment="center"
+        android:layout_marginRight="12dp"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/list_item_string"
+        android:layout_toLeftOf="@+id/cb_Gottem"
+        android:layout_toStartOf="@+id/cb_Gottem"
+        android:layout_marginEnd="12dp"
+        android:layout_centerVertical="true"/>
+
+    <!-- REMOVE BUTTON -->
+    <CheckBox
+        android:id="@+id/cb_Gottem"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:textSize="12sp"/>
+
+</RelativeLayout>

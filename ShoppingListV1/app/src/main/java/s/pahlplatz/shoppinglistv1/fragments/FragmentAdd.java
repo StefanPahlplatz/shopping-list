@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,13 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 /**
  * Created by Stefan on 22-11-2016.
+ *
+ * Fragment for adding products to the list and adjusting the amount for each product.
  */
 
 public class FragmentAdd extends Fragment
 {
-    private final Database db = new Database();
+    private Database db;
 
     private SwipeRefreshLayout swipeContainer;
     private ListView lv_items;
@@ -35,17 +36,12 @@ public class FragmentAdd extends Fragment
     private AutoCompleteTextView actv_Product;
     private AddProductAdapter adapter;
 
-    public FragmentAdd()
-    {
-        //TODO: CHECK IF THIS CAN BE REMOVED
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        db = new Database(getActivity().getBaseContext().getResources().getString(R.string.ConnectionString));
     }
 
     @Override
@@ -131,6 +127,7 @@ public class FragmentAdd extends Fragment
     // Fill the ListView with data from the database
     private class PopulateListView extends AsyncTask<Context, Void, AddProductAdapter>
     {
+        @SuppressWarnings("unchecked")
         protected AddProductAdapter doInBackground(Context... params)
         {
             // Get context from param
@@ -164,6 +161,7 @@ public class FragmentAdd extends Fragment
             super();
         }
 
+        @SuppressWarnings("unchecked")
         protected ArrayAdapter doInBackground(Void... params)
         {
             // Get all products from database

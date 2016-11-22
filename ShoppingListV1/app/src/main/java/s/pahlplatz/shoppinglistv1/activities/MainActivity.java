@@ -3,27 +3,41 @@ package s.pahlplatz.shoppinglistv1.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentAdd;
+import s.pahlplatz.shoppinglistv1.fragments.FragmentAll;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static void hideKeyboard(Context ctx)
+    {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Check if no view has focus:
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,6 +45,19 @@ public class MainActivity extends AppCompatActivity
         // Initialize activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+/*
+        SharedPreferences sharedPreferences = getSharedPreferences("Preferences", 0);
+        if (!sharedPreferences.getBoolean("logged_in", false))
+        {
+            // Create login activity
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+
+            // Prevent backwards navigation
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            // Start login activity
+            startActivity(loginIntent);
+        }*/
 
         // Load fragment
         if (savedInstanceState == null)
@@ -117,7 +144,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = FragmentAdd.class;
                 break;
             case R.id.nav_allproducts:
-                //fragmentClass = FragmentAll.class;
+                fragmentClass = FragmentAll.class;
                 break;
             case R.id.nav_list:
                 //fragmentClass = FragmentList.class;
@@ -142,18 +169,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
-    }
-
-    private static void hideKeyboard(Context ctx)
-    {
-        InputMethodManager inputManager = (InputMethodManager) ctx
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Check if no view has focus:
-        View v = ((Activity) ctx).getCurrentFocus();
-        if (v == null)
-            return;
-
-        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }

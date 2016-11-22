@@ -3,6 +3,7 @@ package s.pahlplatz.shoppinglistv1.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,8 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
         this.count = count;
         this.ctx = ctx;
 
-        db = new Database(ctx.getResources().getString(R.string.ConnectionString));
+        SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
+        db = new Database(ctx.getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
     }
 
     @Override

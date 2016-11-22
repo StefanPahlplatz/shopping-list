@@ -14,12 +14,12 @@ import java.sql.DriverManager;
  * passing it to the database class.
  */
 
-class ConnectionClass
+public class ConnectionClass
 {
     private static final String TAG = ConnectionClass.class.getSimpleName();
 
     @SuppressLint("NewApi")
-    Connection CONN(String conString)
+    public Connection CONN(String conString)
     {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

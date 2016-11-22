@@ -2,6 +2,7 @@ package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +54,8 @@ public class FragmentAll extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_all_products, container, false);
 
-        db = new Database(getActivity().getBaseContext().getResources().getString(R.string.ConnectionString)); //TODO: CAN BE SHORTER?
+        SharedPreferences sharedPref = getContext().getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
+        db = new Database(getContext().getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
 
         lv_Products = (ListView) view.findViewById(R.id.lv_Products);
         lv_Products.setLongClickable(true);

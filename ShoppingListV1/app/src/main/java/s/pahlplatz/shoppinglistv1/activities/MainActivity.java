@@ -2,6 +2,8 @@ package s.pahlplatz.shoppinglistv1.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         // Initialize activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
+
         SharedPreferences sharedPreferences = getSharedPreferences("Preferences", 0);
         if (!sharedPreferences.getBoolean("logged_in", false))
         {
@@ -57,42 +59,44 @@ public class MainActivity extends AppCompatActivity
 
             // Start login activity
             startActivity(loginIntent);
-        }*/
-
-        // Load fragment
-        if (savedInstanceState == null)
+            this.finish();
+        } else
         {
-            Fragment fragment = null;
-            Class fragmentClass;
-            fragmentClass = FragmentAdd.class;
 
-            try
+            // Load fragment
+            if (savedInstanceState == null)
             {
-                fragment = (Fragment) fragmentClass.newInstance();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
+                Fragment fragment = null;
+                Class fragmentClass;
+                fragmentClass = FragmentAdd.class;
+
+                try
+                {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
             }
 
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+            // Create toolbar
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            // Create DrawerLayout
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+
+            // Create NavigationView
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.getMenu().getItem(0).setChecked(true);
         }
-
-        // Create toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        // Create DrawerLayout
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        // Create NavigationView
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override

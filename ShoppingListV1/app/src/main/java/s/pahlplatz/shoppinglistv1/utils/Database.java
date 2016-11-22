@@ -11,10 +11,19 @@ import static android.content.ContentValues.TAG;
 
 /**
  * Created by Stefan on 22-11-2016.
+ *
+ * Database class to interact with the SQL Database in a structured way.
  */
 
 public class Database
 {
+    private String conString;
+
+    public Database(String conString)
+    {
+        this.conString = conString;
+    }
+
     public void removeProduct(String product)
     {
         String query = "DELETE FROM dbo.Products WHERE Product='"+ product +"'";
@@ -38,7 +47,7 @@ public class Database
 
         try
         {
-            Connection con = new ConnectionClass().CONN();
+            Connection con = new ConnectionClass().CONN(conString);
 
             if (con == null)
             {
@@ -55,7 +64,9 @@ public class Database
                     products.add(rs.getString(1));
                 }
             }
-            con.close();
+
+            if (con != null)
+                con.close();
         }
         catch (Exception ex)
         {
@@ -84,7 +95,7 @@ public class Database
 
         try
         {
-            Connection con = new ConnectionClass().CONN();
+            Connection con = new ConnectionClass().CONN(conString);
 
             if (con == null)
             {
@@ -104,7 +115,9 @@ public class Database
                     checked.add(rs.getInt(5));
                 }
             }
-            con.close();
+
+            if (con != null)
+                con.close();
         }
         catch (Exception ex)
         {
@@ -114,7 +127,7 @@ public class Database
         return list;
     }
 
-    class ExecuteQuery implements Runnable
+    private class ExecuteQuery implements Runnable
     {
         String query;
 
@@ -127,7 +140,7 @@ public class Database
         {
             try
             {
-                Connection con = new ConnectionClass().CONN();
+                Connection con = new ConnectionClass().CONN(conString);
 
                 // Test internet
                 if (con == null)
@@ -140,7 +153,9 @@ public class Database
                     stmt.execute(query);
                     Log.d(TAG, "SQL operation successful");
                 }
-                con.close();
+
+                if (con != null)
+                    con.close();
             }
             catch (Exception ex)
             {

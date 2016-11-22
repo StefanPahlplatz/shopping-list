@@ -18,6 +18,8 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 /**
  * Created by Stefan on 22-11-2016.
+ *
+ * Custom array adapter for FragmentAdd
  */
 
 public class AddProductAdapter extends BaseAdapter implements ListAdapter
@@ -34,7 +36,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
         this.count = count;
         this.ctx = ctx;
 
-        db = new Database();
+        db = new Database(ctx.getResources().getString(R.string.ConnectionString));
     }
 
     @Override

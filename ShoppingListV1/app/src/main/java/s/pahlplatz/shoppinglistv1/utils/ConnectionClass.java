@@ -3,24 +3,24 @@ package s.pahlplatz.shoppinglistv1.utils;
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 22-11-2016.
+ *
+ * Class to help the database make a connection by creating the connection here and then
+ * passing it to the database class.
  */
 
-public class ConnectionClass
+class ConnectionClass
 {
-    //private final String connectionString = Resources.getSystem().getString(R.string.ConnectionString);
+    private static final String TAG = ConnectionClass.class.getSimpleName();
 
     @SuppressLint("NewApi")
-    public Connection CONN()
+    Connection CONN(String conString)
     {
-        String connectionString = "jdbc:jtds:sqlserver://ShoppingDB.mssql.somee.com;databaseName=ShoppingDB;user=stefan314_SQLLogin_1;password=eigscrfomx;";
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -30,7 +30,7 @@ public class ConnectionClass
         {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
-            conn = DriverManager.getConnection(connectionString);
+            conn = DriverManager.getConnection(conString);
         }
         catch (Exception ex)
         {

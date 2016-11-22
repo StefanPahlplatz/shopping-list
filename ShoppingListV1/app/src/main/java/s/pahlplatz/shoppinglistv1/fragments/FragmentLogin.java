@@ -86,6 +86,17 @@ public class FragmentLogin extends Fragment
             }
         });
 
+        // Create new account
+        Button btn_CreateAcc = (Button) view.findViewById(R.id.login_btn_create);
+        btn_CreateAcc.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // TODO: GO TO NEW FRAGMENT TO CREATE AN ACCOUNT
+            }
+        });
+
         return view;
     }
 

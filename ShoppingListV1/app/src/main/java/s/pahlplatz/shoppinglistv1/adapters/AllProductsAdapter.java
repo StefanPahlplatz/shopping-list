@@ -1,6 +1,7 @@
 package s.pahlplatz.shoppinglistv1.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,8 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         this.products = products;
         this.ctx = ctx;
 
-        db = new Database(ctx.getResources().getString(R.string.ConnectionString));
+        SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
+        db = new Database(ctx.getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
 
         // TODO: GET PRODUCTSINCURRENT LIST FROM DATABASE
         // productsInCurrent = db.

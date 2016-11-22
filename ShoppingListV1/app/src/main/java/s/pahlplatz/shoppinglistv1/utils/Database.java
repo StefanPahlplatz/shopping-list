@@ -21,16 +21,20 @@ import static android.content.ContentValues.TAG;
 public class Database
 {
     private String conString;
+    private Integer userid;
 
-    public Database(String conString)
+    public Database(String conString, Integer userid)
     {
         this.conString = conString;
+        this.userid = userid;
     }
 
     public void addProduct(String product)
     {
         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(new Date());
-        String query = "INSERT INTO dbo.Products (Product, Amount, Date, Checked) " + "VALUES ('" + product + "', 1, '" + date + "', 0)"; //TODO ALSO ADD IT IN THE ALLPRODUCTS TABLE
+
+        String query = "INSERT INTO dbo.Products (UserID, Product, Amount, Date, Checked, IsInList) "
+                + "VALUES (userid,'" + product + "',1,'" + date + "',0,1)";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -38,7 +42,7 @@ public class Database
 
     public void removeProduct(String product)
     {
-        String query = "DELETE FROM dbo.Products WHERE Product='"+ product +"'";
+        String query = "DELETE FROM dbo.Products WHERE Product='" + product + "' AND UserID=" + userid + "";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -46,7 +50,7 @@ public class Database
 
     public void updateCount(String product, Integer newCount)
     {
-        String query = "UPDATE dbo.Products SET Amount=" + newCount + "WHERE Product='" + product + "'";
+        String query = "UPDATE dbo.Products SET Amount=" + newCount + "WHERE Product='" + product + "' AND UserID=" + userid + "";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -54,7 +58,7 @@ public class Database
 
     public void updateName(String product, String newName)
     {
-        String query = "UPDATE dbo.AllProducts SET Product='" + newName + "'WHERE Product='" + product + "'";
+        String query = "UPDATE dbo.AllProducts SET Product='" + newName + "'WHERE Product='" + product + "'AND UserID=" + userid + "";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -75,7 +79,7 @@ public class Database
             }
             else
             {
-                String query = "select * from dbo.AllProducts ORDER BY Product";
+                String query = "select * from dbo.Products WHERE UserID=" + userid + " ORDER BY Product";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
@@ -123,7 +127,7 @@ public class Database
             }
             else
             {
-                String query = "select * from dbo.Products ORDER BY Product";
+                String query = "select * from dbo.Products WHERE UserID=" + userid + " ORDER BY Product";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 

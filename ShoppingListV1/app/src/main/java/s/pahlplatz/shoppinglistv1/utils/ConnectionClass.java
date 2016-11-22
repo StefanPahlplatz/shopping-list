@@ -19,7 +19,7 @@ public class ConnectionClass
     @SuppressLint("NewApi")
     public Connection CONN()
     {
-        String connectionString = "jdbc:jtds:sqlserver://ShoppingDB.mssql.somee.com;databaseName=ShoppingDB;user=stefan314_SQLLogin_1;password=eigscrfomx;";
+        String connectionString = "connectionstring";
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

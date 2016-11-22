@@ -115,7 +115,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
                 else
                 {
                     // Adjust value in server
-                    db.adjustCount(list.get(position), count.get(position) - 1);
+                    db.updateCount(list.get(position), count.get(position) - 1);
 
                     // Adjust value in client
                     count.set(position, count.get(position) - 1);
@@ -131,7 +131,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
             public void onClick(View v)
             {
                 // Adjust value in server
-                db.adjustCount(list.get(position), count.get(position) + 1);
+                db.updateCount(list.get(position), count.get(position) + 1);
 
                 // Adjust value in client
                 count.set(position, count.get(position) + 1);

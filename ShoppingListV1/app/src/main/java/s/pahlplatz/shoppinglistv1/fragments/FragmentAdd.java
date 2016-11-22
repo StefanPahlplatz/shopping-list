@@ -31,7 +31,7 @@ public class FragmentAdd extends Fragment
     private Database db;
 
     private SwipeRefreshLayout swipeContainer;
-    private ListView lv_items;
+    private ListView lv_Products;
     private ArrayList<ArrayList> list;
     private AutoCompleteTextView actv_Product;
     private AddProductAdapter adapter;
@@ -50,9 +50,9 @@ public class FragmentAdd extends Fragment
         final View view = inflater.inflate(R.layout.fragment_add_product, container, false);
 
         // Configure ListView
-        lv_items = (ListView) view.findViewById(R.id.lv_Products);
-        lv_items.setLongClickable(true);
-        registerForContextMenu(lv_items);
+        lv_Products = (ListView) view.findViewById(R.id.lv_Products);
+        lv_Products.setLongClickable(true);
+        registerForContextMenu(lv_Products);
         new PopulateListView().execute(getContext());
 
         // Configure the SwipeRefreshLayout
@@ -86,7 +86,7 @@ public class FragmentAdd extends Fragment
             {
                 if (actv_Product.getText().toString().isEmpty())
                 {
-                    lv_items.setAdapter(adapter);
+                    lv_Products.setAdapter(adapter);
                 }
                 else
                 {
@@ -108,7 +108,7 @@ public class FragmentAdd extends Fragment
                             }
                         }
 
-                        lv_items.setAdapter(new AddProductAdapter(customProducts, customCount, getContext()));
+                        lv_Products.setAdapter(new AddProductAdapter(customProducts, customCount, getContext()));
                     }
                 }
             }
@@ -144,7 +144,7 @@ public class FragmentAdd extends Fragment
         {
             // Assign the adapter
             adapter = param;
-            lv_items.setAdapter(adapter);
+            lv_Products.setAdapter(adapter);
 
             if(swipeContainer.isRefreshing())
             {

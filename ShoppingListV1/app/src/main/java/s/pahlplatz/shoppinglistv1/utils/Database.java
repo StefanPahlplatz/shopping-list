@@ -5,7 +5,10 @@ import android.util.Log;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
@@ -24,6 +27,15 @@ public class Database
         this.conString = conString;
     }
 
+    public void addProduct(String product)
+    {
+        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(new Date());
+        String query = "INSERT INTO dbo.Products (Product, Amount, Date, Checked) " + "VALUES ('" + product + "', 1, '" + date + "', 0)"; //TODO ALSO ADD IT IN THE ALLPRODUCTS TABLE
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
     public void removeProduct(String product)
     {
         String query = "DELETE FROM dbo.Products WHERE Product='"+ product +"'";
@@ -32,9 +44,17 @@ public class Database
         myThread.start();
     }
 
-    public void adjustCount(String product, Integer newCount)
+    public void updateCount(String product, Integer newCount)
     {
         String query = "UPDATE dbo.Products SET Amount=" + newCount + "WHERE Product='" + product + "'";
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
+    public void updateName(String product, String newName)
+    {
+        String query = "UPDATE dbo.AllProducts SET Product='" + newName + "'WHERE Product='" + product + "'";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();

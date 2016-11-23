@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ConnectionString">jdbc:jtds:sqlserver://serverip;databaseName=InitialCatalog;user=username;password=password;</string>
+</resources>

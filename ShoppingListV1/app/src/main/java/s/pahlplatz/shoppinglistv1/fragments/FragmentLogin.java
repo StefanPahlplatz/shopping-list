@@ -62,7 +62,7 @@ public class FragmentLogin extends Fragment
             @Override
             public void onClick(View v)
             {
-                // TODO: GO TO NEW FRAGMENT TO CREATE AN ACCOUNT
+                // TODO: Go to new fragment to create account
             }
         });
 

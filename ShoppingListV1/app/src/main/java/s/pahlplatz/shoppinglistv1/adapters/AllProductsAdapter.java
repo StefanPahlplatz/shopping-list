@@ -1,5 +1,6 @@
 package s.pahlplatz.shoppinglistv1.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
@@ -38,7 +39,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
         db = new Database(ctx.getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
 
-        // TODO: GET PRODUCTSINCURRENT LIST FROM DATABASE
+        // TODO: Get productsInCurrent from database so we can show which items are already in the list (maybe make this a param? or let the database return both lists).
         // productsInCurrent = db.
     }
 
@@ -60,6 +61,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         return 0;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {

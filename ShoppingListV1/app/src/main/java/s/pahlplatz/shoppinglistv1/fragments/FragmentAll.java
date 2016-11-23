@@ -151,7 +151,7 @@ public class FragmentAll extends Fragment
                         db.updateName(listItemName, m_Text);
 
                         // Update name in client
-                        new PopulateListView().execute(getContext()); //TODO: Updating after renaming is very slow, just update locally
+                        new PopulateListView().execute(getContext()); //TODO: Updating the whole list from the database after renaming is very slow, just update locally
 
                         // Product renamed!
                         Toast.makeText(getActivity(), "Product hernoemd!", Toast.LENGTH_SHORT).show();

@@ -22,7 +22,7 @@ import static android.content.ContentValues.TAG;
 /**
  * Created by Stefan on 23-11-2016.
  *
- * Represents an asynchronous login/registration task used to authenticate
+ * Represents an asynchronous login task used to authenticate
  * the user.
  */
 
@@ -129,7 +129,7 @@ public class AuthUser extends AsyncTask<String, String, String>
                 }
             } catch (Exception ex)
             {
-                Log.e("Exception", ex.toString());
+                Log.e(TAG, "doInBackground: Couldn't log in", ex);
                 isSuccess = false;
                 response = "Exceptions";
             }

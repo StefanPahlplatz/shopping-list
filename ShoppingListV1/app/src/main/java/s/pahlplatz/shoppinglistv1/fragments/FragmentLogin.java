@@ -2,6 +2,8 @@ package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.utils.AuthUser;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Stefan on 22-11-2016.
@@ -51,7 +55,7 @@ public class FragmentLogin extends Fragment
             @Override
             public void onClick(View v)
             {
-                Login();
+                login();
             }
         });
 
@@ -62,7 +66,18 @@ public class FragmentLogin extends Fragment
             @Override
             public void onClick(View v)
             {
-                // TODO: Go to new fragment to create account
+                Class fragmentClass = FragmentCreateAccount.class;
+                Fragment fragment = null;
+                try
+                {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception ex)
+                {
+                    Log.e(TAG, "onClick: Couldn't create fragment instance", ex);
+                }
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.loginactivity_container, fragment).commit();
             }
         });
 
@@ -74,7 +89,7 @@ public class FragmentLogin extends Fragment
             {
                 if (id == R.id.login || id == EditorInfo.IME_NULL)
                 {
-                    Login();
+                    login();
                     return true;
                 }
                 return false;
@@ -83,7 +98,7 @@ public class FragmentLogin extends Fragment
         return view;
     }
 
-    private void Login()
+    private void login()
     {
         progressBar.setVisibility(View.VISIBLE);
         btn_SignIn.setEnabled(false);

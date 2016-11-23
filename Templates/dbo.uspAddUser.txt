@@ -1,0 +1,37 @@
+USE [shoppinglistdb]
+GO
+
+/****** Object:  StoredProcedure [dbo].[uspAddUser]    Script Date: 23-11-2016 11:11:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[uspAddUser]
+    @pLogin NVARCHAR(50), 
+    @pPassword NVARCHAR(50),
+    @pFirstName NVARCHAR(40) = NULL, 
+    @pLastName NVARCHAR(40) = NULL,
+	@pRegDate NVARCHAR(50),
+    @responseMessage NVARCHAR(250) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON
+
+    DECLARE @salt UNIQUEIDENTIFIER=NEWID()
+    BEGIN TRY
+
+        INSERT INTO dbo.[Users] (LoginName, PasswordHash, Salt, FirstName, LastName, RegDate)
+        VALUES(@pLogin, HASHBYTES('SHA2_512', @pPassword+CAST(@salt AS NVARCHAR(36))), @salt, @pFirstName, @pLastName, @pRegDate)
+
+       SET @responseMessage='Success'
+
+    END TRY
+    BEGIN CATCH
+        SET @responseMessage=ERROR_MESSAGE() 
+    END CATCH
+
+END
+GO

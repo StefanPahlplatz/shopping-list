@@ -116,8 +116,6 @@ public class AuthUser extends AsyncTask<String, String, String>
                         switch (response)
                         {
                             case "Invalid login":
-                                isSuccess = false;
-                                continue;
                             case "Incorrect password":
                                 isSuccess = false;
                                 break;

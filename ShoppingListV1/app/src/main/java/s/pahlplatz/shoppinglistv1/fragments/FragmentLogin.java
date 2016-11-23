@@ -23,6 +23,7 @@ import java.sql.Statement;
 
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.activities.MainActivity;
+import s.pahlplatz.shoppinglistv1.utils.AuthUser;
 import s.pahlplatz.shoppinglistv1.utils.ConnectionClass;
 
 /**
@@ -37,8 +38,8 @@ public class FragmentLogin extends Fragment
 
     // UI references.
     private EditText et_Username, et_Password;
-    private View view_Login;
-    private ProgressBar pbbar;
+    private ProgressBar progressBar;
+    private Button btn_SignIn;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -53,36 +54,18 @@ public class FragmentLogin extends Fragment
 
         et_Username = (EditText) view.findViewById(R.id.login_et_username);
         et_Password = (EditText) view.findViewById(R.id.login_et_password);
-        view_Login = view.findViewById(R.id.login_layout);
 
-        pbbar = (ProgressBar) view.findViewById(R.id.login_pb_progress);
-        pbbar.setVisibility(View.GONE);
-
-        // Set appropriate button for password keyboard
-        et_Password.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
-            {
-                if (id == R.id.login || id == EditorInfo.IME_NULL)
-                {
-                    DoLogin doLogin = new DoLogin();
-                    doLogin.execute("");
-                    return true;
-                }
-                return false;
-            }
-        });
+        progressBar = (ProgressBar) view.findViewById(R.id.login_pb_progress);
+        progressBar.setVisibility(View.GONE);
 
         // Login button
-        Button btn_SignIn = (Button) view.findViewById(R.id.login_btn_login);
+        btn_SignIn = (Button) view.findViewById(R.id.login_btn_login);
         btn_SignIn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                DoLogin doLogin = new DoLogin();
-                doLogin.execute("");
+                Login();
             }
         });
 
@@ -97,119 +80,30 @@ public class FragmentLogin extends Fragment
             }
         });
 
+        // Set appropriate button for password keyboard
+        et_Password.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
+            {
+                if (id == R.id.login || id == EditorInfo.IME_NULL)
+                {
+                    Login();
+                    return true;
+                }
+                return false;
+            }
+        });
         return view;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class DoLogin extends AsyncTask<String, String, String>
+    private void Login()
     {
-        String z = "";
-        Boolean isSuccess = false;
+        progressBar.setVisibility(View.VISIBLE);
+        btn_SignIn.setEnabled(false);
 
-        // Store credentials
-        String username = et_Username.getText().toString();
-        String password = et_Password.getText().toString();
-
-        // Make the progressbar visible
-        @Override
-        protected void onPreExecute()
-        {
-            pbbar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(String r)
-        {
-            // Make the progressbar invisible
-            pbbar.setVisibility(View.GONE);
-
-            // Display message from doInBackground
-            Toast.makeText(getContext(), r, Toast.LENGTH_SHORT).show();
-
-            Log.d(TAG, r);
-
-            if (isSuccess)
-            {
-                // Create main activity
-                Intent mainIntent = new Intent(getContext(), MainActivity.class);
-
-                // Prevent backwards navigation
-                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                // Start login activity
-                startActivity(mainIntent);
-
-                // Stop this activity
-                getActivity().finish();
-            }
-        }
-
-        @Override
-        protected void onCancelled(String r)
-        {
-            // Make the progressbar invisible
-            pbbar.setVisibility(View.GONE);
-
-            // Display message from doInBackground
-            Toast.makeText(getContext(), r, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected String doInBackground(String... params)
-        {
-            // Check if the username and password are valid
-            if (username.trim().equals("") || password.trim().equals(""))
-            {
-                z = "Please enter User Id and Password";
-            } else
-            {
-                try
-                {
-                    ConnectionClass con = new ConnectionClass();
-                    Connection connection = con.CONN(getContext().getResources().getString(R.string.ConnectionString));
-
-                    if (connection == null)
-                    {
-                        z = "Error in connection with SQL server";
-                    } else
-                    {
-                        String query = "DECLARE	@responseMessage nvarchar(250) EXEC	dbo.uspLogin @pLoginName = N'" + username + "', @pPassword = N'" + password + "', @responseMessage = @responseMessage OUTPUT SELECT @responseMessage as N'@responseMessage'";
-
-                        Statement stmt = connection.createStatement();
-                        ResultSet rs = stmt.executeQuery(query);
-
-                        while (rs.next())
-                        {
-                            z = rs.getString(1);
-                            Log.d(TAG, "Server response: " + z);
-
-                            switch (z)
-                            {
-                                case "Invalid login":
-                                    isSuccess = false;
-                                    continue;
-                                case "Incorrect password":
-                                    isSuccess = false;
-                                    break;
-                                case "User successfully logged in":
-                                    SharedPreferences sp = getContext().getSharedPreferences("Preferences", 0);
-                                    sp.edit().putBoolean("logged_in", true).apply();
-                                    isSuccess = true;
-                                    break;
-                            }
-                        }
-                    }
-                } catch (Exception ex)
-                {
-                    Log.e("Exception", ex.toString());
-                    isSuccess = false;
-                    z = "Exceptions";
-                }
-            }
-            return z;
-        }
+        // Start login procedure
+        new AuthUser(et_Username.getText().toString(), et_Password.getText().toString()
+                , getContext(), progressBar, btn_SignIn).execute();
     }
 }

@@ -1,11 +1,7 @@
 package s.pahlplatz.shoppinglistv1.fragments;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,28 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import s.pahlplatz.shoppinglistv1.R;
-import s.pahlplatz.shoppinglistv1.activities.MainActivity;
 import s.pahlplatz.shoppinglistv1.utils.AuthUser;
-import s.pahlplatz.shoppinglistv1.utils.ConnectionClass;
 
 /**
  * Created by Stefan on 22-11-2016.
- * <p>
+ *
  * Fragment to log in to the users personal account.
  */
 
 public class FragmentLogin extends Fragment
 {
-    private static final String TAG = FragmentLogin.class.getSimpleName();
-
-    // UI references.
     private EditText et_Username, et_Password;
     private ProgressBar progressBar;
     private Button btn_SignIn;

@@ -63,7 +63,6 @@ public class CreateUser extends AsyncTask<String, String, String>
     {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(ctx, r, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, r);
 
         if (isSuccess)
         {

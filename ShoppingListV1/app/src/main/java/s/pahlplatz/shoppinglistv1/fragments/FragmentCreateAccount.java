@@ -82,7 +82,6 @@ public class FragmentCreateAccount extends Fragment
     //TODO: set proper error messages
     private void createAccount()
     {
-
         // Check if the input is valid
         if (et_Username.getText().toString().isEmpty())
         {

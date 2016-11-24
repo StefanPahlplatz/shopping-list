@@ -1,7 +1,6 @@
 package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -52,11 +51,6 @@ public class FragmentCreateAccount extends Fragment
         btn_CreateAccount = (Button) view.findViewById(R.id.createaccount_btn_create);
         progressBar = (ProgressBar) view.findViewById(R.id.createaccount_pb_progress);
 
-        TextInputLayout username = (TextInputLayout) view.findViewById(R.id.createaccount_tilayout_username);
-        //username.setErrorEnabled(true);
-        //username.setError("testerror");
-        //username.requestFocus();
-
         // Hide progressbar
         progressBar.setVisibility(View.GONE);
 
@@ -88,6 +82,7 @@ public class FragmentCreateAccount extends Fragment
     //TODO: set proper error messages
     private void createAccount()
     {
+
         // Check if the input is valid
         if (et_Username.getText().toString().isEmpty())
         {
@@ -95,6 +90,7 @@ public class FragmentCreateAccount extends Fragment
             et_Username.requestFocus();
         } else if (et_Password.getText().toString().isEmpty())
         {
+
             et_Password.setError("Please enter a password");
             et_Password.requestFocus();
         } else if (et_PasswordConfirm.getText().toString().isEmpty())

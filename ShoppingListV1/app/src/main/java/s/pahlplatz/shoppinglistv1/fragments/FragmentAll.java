@@ -55,7 +55,9 @@ public class FragmentAll extends Fragment
         View view = inflater.inflate(R.layout.fragment_all_products, container, false);
 
         SharedPreferences sharedPref = getContext().getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
-        db = new Database(getContext().getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
+        db = new Database(getContext().getResources().getString(R.string.ConnectionString)
+                , getContext()
+                .getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
 
         lv_Products = (ListView) view.findViewById(R.id.lv_Products);
         lv_Products.setLongClickable(true);

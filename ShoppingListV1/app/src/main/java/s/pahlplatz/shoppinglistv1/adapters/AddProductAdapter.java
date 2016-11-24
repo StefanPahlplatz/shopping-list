@@ -40,8 +40,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
         this.ctx = ctx;
 
         db = new Database(ctx.getResources().getString(R.string.ConnectionString)
-                , ctx
-                .getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
+                , ctx.getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }
 
     @Override
@@ -103,7 +102,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
                             if (which == DialogInterface.BUTTON_POSITIVE)
                             {
                                 // Remove from server
-                                db.removeProduct(list.get(position));
+                                db.updateIsInList(list.get(position));
 
                                 // Remove from client
                                 list.remove(position);

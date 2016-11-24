@@ -72,7 +72,7 @@ public class Database
     public void updateIsInList(String product)
     {
         String query = "UPDATE dbo.Products " +
-                "SET IsInList=(IsInList^1), Amount=1" +
+                "SET IsInList=(IsInList^1), Amount=1, Checked=0" +
                 "WHERE Product='" + product + "' " +
                 "AND UserID=" + userid;
 

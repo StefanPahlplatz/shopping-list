@@ -105,8 +105,6 @@ public class AuthUser extends AsyncTask<String, String, String>
                                         .putInt("userid", rs.getInt(1))
                                         .apply();
                                 isSuccess = true;
-
-                                Log.d(TAG, "doInBackground() returned: " + rs.getInt(1));
                                 break;
                         }
                     }

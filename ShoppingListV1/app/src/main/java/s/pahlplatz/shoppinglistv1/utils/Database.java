@@ -50,7 +50,10 @@ public class Database
 
     public void updateCount(String product, Integer newCount)
     {
-        String query = "UPDATE dbo.Products SET Amount=" + newCount + "WHERE Product='" + product + "' AND UserID=" + userid + "";
+        String query = "UPDATE dbo.Products " +
+                "SET Amount=" + newCount + "" +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid;
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -101,21 +104,17 @@ public class Database
     }
 
     // Return everything from dbo.Products
-    public ArrayList<ArrayList> getAllInfo()
+    public ArrayList<ArrayList> getInfoAddProducts()
     {
-        // Create lists for every column
+        // Create lists for products and count
         ArrayList<String> products = new ArrayList<>();
         ArrayList<Integer> count = new ArrayList<>();
-        ArrayList<String> date = new ArrayList<>();
-        ArrayList<Integer> checked = new ArrayList<>();
 
         ArrayList<ArrayList> list = new ArrayList<>();
 
         // Add all lists to main list
         list.add(products);
         list.add(count);
-        list.add(date);
-        list.add(checked);
 
         try
         {
@@ -127,16 +126,18 @@ public class Database
             }
             else
             {
-                String query = "select * from dbo.Products WHERE UserID=" + userid + " ORDER BY Product";
+                String query = "SELECT Product, Amount " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "AND IsInList=1 " +
+                        "ORDER BY Product";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
                 while(rs.next())
                 {
-                    products.add(rs.getString(2));
-                    count.add(rs.getInt(3));
-                    date.add(rs.getString(4));
-                    checked.add(rs.getInt(5));
+                    products.add(rs.getString(1));
+                    count.add(rs.getInt(2));
                 }
             }
 

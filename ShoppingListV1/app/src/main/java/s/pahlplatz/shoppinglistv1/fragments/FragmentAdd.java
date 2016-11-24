@@ -1,7 +1,6 @@
 package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,8 +28,9 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 public class FragmentAdd extends Fragment
 {
-    private Database db;
+    private static final String TAG = FragmentLogin.class.getSimpleName();
 
+    private Database db;
     private SwipeRefreshLayout swipeContainer;
     private ListView lv_Products;
     private ArrayList<ArrayList> list;
@@ -42,8 +42,9 @@ public class FragmentAdd extends Fragment
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        SharedPreferences sharedPref = getContext().getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
-        db = new Database(getContext().getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
+        db = new Database(getContext().getResources().getString(R.string.ConnectionString)
+                , getContext()
+                .getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }
 
     @Override
@@ -136,7 +137,7 @@ public class FragmentAdd extends Fragment
             Context context = params[0];
 
             // Get list from database
-            list = db.getAllInfo();
+            list = db.getInfoAddProducts();
 
             // Pass the adapter to onPostExecute
             return new AddProductAdapter(list.get(0),list.get(1), context);

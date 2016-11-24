@@ -1,7 +1,6 @@
 package s.pahlplatz.shoppinglistv1.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +17,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import s.pahlplatz.shoppinglistv1.R;
-import s.pahlplatz.shoppinglistv1.activities.MainActivity;
 
 /**
  * Created by Stefan on 23-11-2016.
@@ -59,28 +57,6 @@ public class CreateUser extends AsyncTask<String, String, String>
     }
 
     @Override
-    protected void onPostExecute(String r)
-    {
-        progressBar.setVisibility(View.GONE);
-
-        if (isSuccess)
-        {
-            // Create main activity
-            Intent mainIntent = new Intent(ctx, MainActivity.class);
-
-            // Prevent backwards navigation
-            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            // Start login activity
-            ctx.startActivity(mainIntent);
-
-        } else
-        {
-            btn_CreateAccount.setEnabled(true);
-        }
-    }
-
-    @Override
     protected void onCancelled(String r)
     {
         progressBar.setVisibility(View.GONE);
@@ -113,22 +89,26 @@ public class CreateUser extends AsyncTask<String, String, String>
                         "          @pRegDate = N'" + date + "',\n" +
                         "          @responseMessage=@responseMessage OUTPUT\n" +
                         "\n" +
-                        "SELECT @responseMessage as N'@responseMessage', UserID ";
+                        "SELECT @responseMessage as N'@responseMessage'";
 
                 // Run the query
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
-                Log.d(TAG, "doInBackground() returned: " + rs.getInt(1));
+                while (rs.next())
+                {
+                    response = rs.getString(1);
 
-                // Store the userid
-                ctx.getSharedPreferences("settings", Context.MODE_PRIVATE)
-                        .edit()
-                        .putInt("userid", rs.getInt(1))
-                        .apply();
-                isSuccess = true;
-
-                return response;
+                    // Switch for server response
+                    if (response.equals("Success"))
+                    {
+                        isSuccess = true;
+                    } else
+                    {
+                        Log.wtf(TAG, "uhh... wtf? something wrong with sql server?");
+                        isSuccess = false;
+                    }
+                }
             }
         } catch (Exception ex)
         {
@@ -138,5 +118,20 @@ public class CreateUser extends AsyncTask<String, String, String>
         }
 
         return response;
+    }
+
+    @Override
+    protected void onPostExecute(String r)
+    {
+        progressBar.setVisibility(View.GONE);
+
+        if (isSuccess)
+        {
+            // Start login procedure
+            new AuthUser(username, password, ctx, progressBar, btn_CreateAccount).execute();
+        } else
+        {
+            btn_CreateAccount.setEnabled(true);
+        }
     }
 }

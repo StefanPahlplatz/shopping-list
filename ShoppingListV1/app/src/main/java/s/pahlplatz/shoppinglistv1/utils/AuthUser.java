@@ -2,7 +2,6 @@ package s.pahlplatz.shoppinglistv1.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -17,8 +16,6 @@ import java.sql.Statement;
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.activities.MainActivity;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 23-11-2016.
  *
@@ -28,6 +25,8 @@ import static android.content.ContentValues.TAG;
 
 public class AuthUser extends AsyncTask<String, String, String>
 {
+    private static final String TAG = AuthUser.class.getSimpleName();
+
     private String response = "";
     private Boolean isSuccess = false;
 
@@ -56,8 +55,6 @@ public class AuthUser extends AsyncTask<String, String, String>
     protected void onPostExecute(String r)
     {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(ctx, r, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, r);
 
         if (isSuccess)
         {
@@ -102,8 +99,13 @@ public class AuthUser extends AsyncTask<String, String, String>
                     response = "Error in connection with SQL server";
                 } else
                 {
-                    // Login procedure
-                    String query = "DECLARE	@responseMessage nvarchar(250) EXEC	dbo.uspLogin @pLoginName = N'" + username + "', @pPassword = N'" + password + "', @responseMessage = @responseMessage OUTPUT SELECT @responseMessage as N'@responseMessage'";
+                    // Query to run the Login procedure in the server
+                    String query = "DECLARE	@responseMessage nvarchar(250)" +
+                            "EXEC dbo.uspLogin " +
+                            "@pLoginName = N'" + username + "'," +
+                            "@pPassword = N'" + password + "'," +
+                            "@responseMessage = @responseMessage " +
+                            "OUTPUT SELECT @responseMessage as N'@responseMessage'";
 
                     Statement stmt = connection.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
@@ -111,7 +113,6 @@ public class AuthUser extends AsyncTask<String, String, String>
                     while (rs.next())
                     {
                         response = rs.getString(1);
-                        Log.d(TAG, "Server response: " + response);
 
                         switch (response)
                         {
@@ -119,10 +120,14 @@ public class AuthUser extends AsyncTask<String, String, String>
                             case "Incorrect password":
                                 isSuccess = false;
                                 break;
-                            case "User successfully logged in":
-                                SharedPreferences sp = ctx.getSharedPreferences("Preferences", 0);
-                                sp.edit().putBoolean("logged_in", true).apply();
+                            default:
+                                ctx.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                                        .edit()
+                                        .putInt("userid", rs.getInt(1))
+                                        .apply();
                                 isSuccess = true;
+
+                                Log.d(TAG, "doInBackground() returned: " + rs.getInt(1));
                                 break;
                         }
                     }

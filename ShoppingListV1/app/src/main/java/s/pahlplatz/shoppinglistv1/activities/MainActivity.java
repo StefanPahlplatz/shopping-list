@@ -3,8 +3,8 @@ package s.pahlplatz.shoppinglistv1.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Preferences", 0);
-        if (!sharedPreferences.getBoolean("logged_in", false))
+        if (getSharedPreferences("settings", MODE_PRIVATE).getInt("userid", -1) == -1)
         {
             // Create login activity
             Intent loginIntent = new Intent(this, LoginActivity.class);
@@ -62,6 +61,8 @@ public class MainActivity extends AppCompatActivity
             this.finish();
         } else
         {
+            Log.i(TAG, "onCreate: MainActivity created, userid = " +
+                    getSharedPreferences("settings", MODE_PRIVATE).getInt("userid", -1));
 
             // Load fragment
             if (savedInstanceState == null)
@@ -134,9 +135,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
         hideKeyboard(this);
         Fragment fragment = null;
@@ -157,7 +157,14 @@ public class MainActivity extends AppCompatActivity
         }
         try
         {
-            fragment = (Fragment) fragmentClass.newInstance();
+            // TODO: Remove whole null checking block when FragmentList is implemented.
+            if (fragmentClass != null)
+            {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } else
+            {
+                throw new NullPointerException();
+            }
         }
         catch (Exception e)
         {

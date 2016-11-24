@@ -62,7 +62,6 @@ public class CreateUser extends AsyncTask<String, String, String>
     protected void onPostExecute(String r)
     {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(ctx, r, Toast.LENGTH_SHORT).show();
 
         if (isSuccess)
         {
@@ -114,18 +113,18 @@ public class CreateUser extends AsyncTask<String, String, String>
                         "          @pRegDate = N'" + date + "',\n" +
                         "          @responseMessage=@responseMessage OUTPUT\n" +
                         "\n" +
-                        "SELECT @responseMessage as N'@responseMessage', SELECT UserID";
+                        "SELECT @responseMessage as N'@responseMessage', UserID ";
 
                 // Run the query
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
-                Log.i(TAG, "doInBackground: Server response" + rs.getString(1));
+                Log.d(TAG, "doInBackground() returned: " + rs.getInt(1));
 
                 // Store the userid
                 ctx.getSharedPreferences("settings", Context.MODE_PRIVATE)
                         .edit()
-                        .putInt("userid", rs.getInt(2))
+                        .putInt("userid", rs.getInt(1))
                         .apply();
                 isSuccess = true;
 

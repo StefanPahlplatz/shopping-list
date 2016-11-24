@@ -104,6 +104,7 @@ public class CreateUser extends AsyncTask<String, String, String>
             {
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(new Date());
 
+                // Query to run the CreateUser procedure in the server
                 String query = "DECLARE @responseMessage NVARCHAR(250)\n" +
                         "EXEC dbo.uspAddUser\n" +
                         "          @pLogin = N'" + username + "',\n" +
@@ -113,15 +114,22 @@ public class CreateUser extends AsyncTask<String, String, String>
                         "          @pRegDate = N'" + date + "',\n" +
                         "          @responseMessage=@responseMessage OUTPUT\n" +
                         "\n" +
-                        "SELECT @responseMessage as N'@responseMessage'";
+                        "SELECT @responseMessage as N'@responseMessage', SELECT UserID";
+
+                // Run the query
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
-                while (rs.next())
-                {
-                    Log.i(TAG, "doInBackground: Server response" + rs.getString(1));
-                    isSuccess = true;
-                }
+                Log.i(TAG, "doInBackground: Server response" + rs.getString(1));
+
+                // Store the userid
+                ctx.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                        .edit()
+                        .putInt("userid", rs.getInt(2))
+                        .apply();
+                isSuccess = true;
+
+                return response;
             }
         } catch (Exception ex)
         {

@@ -2,7 +2,6 @@ package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +61,7 @@ public class FragmentCreateAccount extends Fragment
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {
                 if (actionId == EditorInfo.IME_NULL)
-                    Log.i(TAG, "onEditorAction: Handle login action from here too!");
+                    createAccount();
                 return false;
             }
         });

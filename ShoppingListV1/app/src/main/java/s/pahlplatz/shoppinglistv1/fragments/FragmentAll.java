@@ -197,7 +197,7 @@ public class FragmentAll extends Fragment
             Context context = params[0];
 
             // Get all products
-            products = db.getAllProducts();
+            products = db.getProductsNotInList();
 
             // Pass the caa to onPostExecute
             return new AllProductsAdapter(products, context);

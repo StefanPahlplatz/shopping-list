@@ -1,9 +1,9 @@
 package s.pahlplatz.shoppinglistv1.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,8 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 public class AddProductAdapter extends BaseAdapter implements ListAdapter
 {
+    private static final String TAG = AddProductAdapter.class.getSimpleName();
+
     private final Database db;
 
     private ArrayList<String> list;
@@ -37,8 +39,9 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
         this.count = count;
         this.ctx = ctx;
 
-        SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
-        db = new Database(ctx.getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
+        db = new Database(ctx.getResources().getString(R.string.ConnectionString)
+                , ctx
+                .getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }
 
     @Override
@@ -59,6 +62,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
         return 0;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
@@ -117,7 +121,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
                 else
                 {
                     // Adjust value in server
-                    db.updateCount(list.get(position), count.get(position) - 1);
+                    db.updateCount(list.get(position), false);
 
                     // Adjust value in client
                     count.set(position, count.get(position) - 1);
@@ -133,7 +137,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
             public void onClick(View v)
             {
                 // Adjust value in server
-                db.updateCount(list.get(position), count.get(position) + 1);
+                db.updateCount(list.get(position), true);
 
                 // Adjust value in client
                 count.set(position, count.get(position) + 1);

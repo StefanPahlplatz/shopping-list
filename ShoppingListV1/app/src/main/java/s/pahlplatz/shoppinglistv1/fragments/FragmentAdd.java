@@ -7,12 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,12 +31,14 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 public class FragmentAdd extends Fragment
 {
-    private static final String TAG = FragmentLogin.class.getSimpleName();
+    private static final String TAG = FragmentAdd.class.getSimpleName();
 
     private Database db;
     private SwipeRefreshLayout swipeContainer;
     private ListView lv_Products;
+    private Button btn_Add;
     private ArrayList<ArrayList> list;
+    private ArrayList<String> productsNotInList;
     private AutoCompleteTextView actv_Product;
     private AddProductAdapter adapter;
 
@@ -53,13 +58,13 @@ public class FragmentAdd extends Fragment
         final View view = inflater.inflate(R.layout.fragment_add_product, container, false);
 
         // Configure ListView
-        lv_Products = (ListView) view.findViewById(R.id.lv_Products);
+        lv_Products = (ListView) view.findViewById(R.id.add_product_lv_Products);
         lv_Products.setLongClickable(true);
         registerForContextMenu(lv_Products);
         new PopulateListView().execute(getContext());
 
         // Configure the SwipeRefreshLayout
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.add_product_swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
@@ -74,7 +79,8 @@ public class FragmentAdd extends Fragment
                 android.R.color.holo_red_light);
 
         // Configure AutoCompleteTextView
-        actv_Product = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextView);
+        actv_Product = (AutoCompleteTextView) view.findViewById(R.id.add_product_autoCompleteTextView);
+        // TODO: If you enter text and the listview updates, then pull down the listview the listview will be reset.
         actv_Product.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -103,7 +109,8 @@ public class FragmentAdd extends Fragment
                         for (int i = 0; i < list.get(0).size(); i++)
                         {
                             // If the list contains the current autocomplete text
-                            if (list.get(0).get(i).toString().toUpperCase().contains(actv_Product.getText().toString().toUpperCase()))
+                            if (list.get(0).get(i).toString().toUpperCase()
+                                    .contains(actv_Product.getText().toString().toUpperCase()))
                             {
                                 // Add the item to the custom lists
                                 customProducts.add(list.get(0).get(i).toString());
@@ -111,7 +118,8 @@ public class FragmentAdd extends Fragment
                             }
                         }
 
-                        lv_Products.setAdapter(new AddProductAdapter(customProducts, customCount, getContext()));
+                        lv_Products.setAdapter(new AddProductAdapter(customProducts, customCount
+                                , getContext()));
                     }
                 }
             }
@@ -122,7 +130,72 @@ public class FragmentAdd extends Fragment
 
             }
         });
+
+        // Fill the list
         new PopulateAutoComplete().execute();
+
+        // Configure add button
+        btn_Add = (Button) view.findViewById(R.id.add_product_btn_add);
+        btn_Add.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Input
+                String productTemp = actv_Product.getText().toString();
+                String product;
+
+                // Make first letter capital
+                try
+                {
+                    product = productTemp.substring(0, 1).toUpperCase() + productTemp.substring(1);
+                } catch (Exception e)
+                {
+                    Toast.makeText(getActivity(), "Invalid name!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "onClick: Exception while making first character capital", e);
+                    return;
+                }
+
+                // Check if the product is already in the list
+                for (int i = 0; i < list.get(0).size(); i++)
+                {
+                    if (list.get(0).get(i).toString().toUpperCase()
+                            .contains(product.trim().toUpperCase()))
+                    {
+                        Toast.makeText(getActivity(), "Product is already in the list!"
+                                , Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                // If the product is already in the database
+                if (productsNotInList.contains(product))
+                {
+                    db.updateIsInList(product);
+                } else
+                {
+                    // Add product to the database
+                    db.addProduct(product);
+                }
+
+                // TODO: Cleaner way of updating the ListView?
+                // Create custom lists
+                ArrayList<String> customProducts = list.get(0);
+                ArrayList<Integer> customCount = list.get(1);
+
+                // Add new item
+                customProducts.add(product);
+                customCount.add(1);
+
+                // Assign adapter
+                AddProductAdapter allProductsAdapter = new AddProductAdapter(customProducts,
+                        customCount, getContext());
+                lv_Products.setAdapter(allProductsAdapter);
+
+                Toast.makeText(getActivity(), "Added " + product + "!", Toast.LENGTH_SHORT).show();
+                actv_Product.setText("");
+            }
+        });
 
         return view;
     }
@@ -168,17 +241,9 @@ public class FragmentAdd extends Fragment
         protected ArrayAdapter doInBackground(Void... params)
         {
             // Get all products from database
-            ArrayList<String> allProducts = db.getAllProducts();
+            productsNotInList = db.getProductsNotInList();
 
-            {
-                // Trim results
-                for (int i = 0; i < allProducts.size(); i++)
-                {
-                    allProducts.set(i, allProducts.get(i).trim());
-                }
-            }
-
-            return new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, allProducts);
+            return new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, productsNotInList);
         }
 
         @Override

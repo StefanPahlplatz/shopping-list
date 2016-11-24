@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 22-11-2016.
  *
@@ -20,6 +18,8 @@ import static android.content.ContentValues.TAG;
 
 public class Database
 {
+    private static final String TAG = Database.class.getSimpleName();
+
     private String conString;
     private Integer userid;
 
@@ -34,7 +34,7 @@ public class Database
         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(new Date());
 
         String query = "INSERT INTO dbo.Products (UserID, Product, Amount, Date, Checked, IsInList) "
-                + "VALUES (userid,'" + product + "',1,'" + date + "',0,1)";
+                + "VALUES (" + userid + ",'" + product + "',1,'" + date + "',0,1)";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -48,10 +48,12 @@ public class Database
         myThread.start();
     }
 
-    public void updateCount(String product, Integer newCount)
+    public void updateCount(String product, boolean increment)
     {
+        String update = increment ? "SET Amount=Amount+1" : "SET Amount=Amount-1 ";
+
         String query = "UPDATE dbo.Products " +
-                "SET Amount=" + newCount + "" +
+                update +
                 "WHERE Product='" + product + "' " +
                 "AND UserID=" + userid;
 
@@ -67,8 +69,19 @@ public class Database
         myThread.start();
     }
 
+    public void updateIsInList(String product)
+    {
+        String query = "UPDATE dbo.Products " +
+                "SET IsInList=(IsInList^1), Amount=1" +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid;
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
     // Return everything from dbo.AllProducts
-    public ArrayList<String> getAllProducts()
+    public ArrayList<String> getProductsNotInList()
     {
         ArrayList<String> products = new ArrayList<>();
 
@@ -82,7 +95,11 @@ public class Database
             }
             else
             {
-                String query = "select * from dbo.Products WHERE UserID=" + userid + " ORDER BY Product";
+                String query = "SELECT Product " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "AND IsInList = 0 " +
+                        "ORDER BY Product";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
@@ -97,7 +114,7 @@ public class Database
         }
         catch (Exception ex)
         {
-            Log.e(TAG, ex.toString());
+            Log.e(TAG, "getAutoCompleteItems: Error while retrieving items from database", ex);
         }
 
         return products;
@@ -176,7 +193,7 @@ public class Database
                 {
                     Statement stmt = con.createStatement();
                     stmt.execute(query);
-                    Log.d(TAG, "SQL operation successful");
+                    Log.d(TAG, "SQL operation successful: " + query);
                 }
 
                 if (con != null)
@@ -184,7 +201,7 @@ public class Database
             }
             catch (Exception ex)
             {
-                Log.e(TAG, ex.toString());
+                Log.e(TAG, "run: Couldn't add product to server", ex);
             }
         }
     }

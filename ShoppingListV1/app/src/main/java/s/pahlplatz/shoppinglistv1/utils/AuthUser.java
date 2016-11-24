@@ -52,27 +52,6 @@ public class AuthUser extends AsyncTask<String, String, String>
     }
 
     @Override
-    protected void onPostExecute(String r)
-    {
-        progressBar.setVisibility(View.GONE);
-
-        if (isSuccess)
-        {
-            // Create main activity
-            Intent mainIntent = new Intent(ctx, MainActivity.class);
-
-            // Prevent backwards navigation
-            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            // Start login activity
-            ctx.startActivity(mainIntent);
-        } else
-        {
-            btn_Login.setEnabled(true);
-        }
-    }
-
-    @Override
     protected void onCancelled(String r)
     {
         progressBar.setVisibility(View.GONE);
@@ -140,6 +119,28 @@ public class AuthUser extends AsyncTask<String, String, String>
             }
         }
         return response;
+    }
+
+    @Override
+    protected void onPostExecute(String r)
+    {
+        progressBar.setVisibility(View.GONE);
+
+        if (isSuccess)
+        {
+            // Create main activity
+            Intent mainIntent = new Intent(ctx, MainActivity.class);
+
+            // Prevent backwards navigation
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            // Start login activity
+            ctx.startActivity(mainIntent);
+        } else
+        {
+            btn_Login.setEnabled(true);
+            Toast.makeText(ctx, "Couldn't log in!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 

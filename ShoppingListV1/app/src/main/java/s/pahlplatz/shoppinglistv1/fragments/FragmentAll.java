@@ -2,7 +2,6 @@ package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,16 +53,18 @@ public class FragmentAll extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_all_products, container, false);
 
-        SharedPreferences sharedPref = getContext().getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
+        // Assign database
         db = new Database(getContext().getResources().getString(R.string.ConnectionString)
                 , getContext()
                 .getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
 
+        // Configure ListView
         lv_Products = (ListView) view.findViewById(R.id.lv_Products);
         lv_Products.setLongClickable(true);
         registerForContextMenu(lv_Products);
         new PopulateListView().execute(getContext());
 
+        // Configure the SwipeRefreshLayout
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -73,8 +74,6 @@ public class FragmentAll extends Fragment
                 new PopulateListView().execute(getContext());
             }
         });
-
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -92,7 +91,7 @@ public class FragmentAll extends Fragment
 
             menu.setHeaderTitle(products.get(info.position));
 
-            String[] menuItems = {"Hernoemen", "Verwijderen"};
+            String[] menuItems = {"Rename", "Delete"};
 
             for (int i = 0; i < menuItems.length; i++)
             {

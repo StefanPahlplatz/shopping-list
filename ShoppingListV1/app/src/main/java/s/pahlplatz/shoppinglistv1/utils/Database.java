@@ -120,7 +120,7 @@ public class Database
         return products;
     }
 
-    // Return everything from dbo.Products
+    // Returns all Products and Amount for active items for the current user
     public ArrayList<ArrayList> getInfoAddProducts()
     {
         // Create lists for products and count

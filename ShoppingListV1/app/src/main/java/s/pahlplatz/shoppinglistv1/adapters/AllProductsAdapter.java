@@ -28,8 +28,8 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
 {
     private final Context ctx;
     private final Database db;
-    private ArrayList<String> products;             // All products
-    private ArrayList<String> productsInCurrent;    // Products that are in the 'current' list
+    private ArrayList<String> products;
+    private ArrayList<String> productsNotInList;
 
     public AllProductsAdapter(ArrayList<String> products, Context ctx)
     {
@@ -37,10 +37,10 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         this.ctx = ctx;
 
         SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
-        db = new Database(ctx.getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
+        db = new Database(ctx.getResources().getString(R.string.ConnectionString)
+                , sharedPref.getInt("userid", -1));
 
-        // TODO: Get productsInCurrent from database so we can show which items are already in the list (maybe make this a param? or let the database return both lists).
-        // productsInCurrent = db.
+        productsNotInList = db.getProductsNotInList();
     }
 
     @Override
@@ -71,6 +71,8 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
             convertView = inflater.inflate(R.layout.custom_listview_allproducts, null);
         }
 
+        // TODO: Only products that are not in the list show up
+
         // Product name
         TextView tv_Product = (TextView) convertView.findViewById(R.id.list_item);
         tv_Product.setText(products.get(position));
@@ -79,7 +81,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         final RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.rl_allproducts_item);
 
         // If the product is in the current list
-        if (productsInCurrent.contains(products.get(position)))
+        if (productsNotInList.contains(products.get(position)))
         {
             rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAlreadyInList));
             btn_Add.setVisibility(View.INVISIBLE);
@@ -95,7 +97,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
                 {
                     rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAlreadyInList));
                     btn_Add.setVisibility(View.INVISIBLE);
-                    db.addProduct(products.get(position));
+                    db.updateIsInList(products.get(position));
                 }
             });
         }

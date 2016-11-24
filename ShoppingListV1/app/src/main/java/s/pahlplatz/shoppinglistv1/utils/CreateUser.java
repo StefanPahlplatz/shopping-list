@@ -20,16 +20,16 @@ import java.util.Locale;
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.activities.MainActivity;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 23-11-2016.
- * <p>
+ *
  * Represents an asynchronous registration task used to create an account for the user.
  */
 
 public class CreateUser extends AsyncTask<String, String, String>
 {
+    private static final String TAG = CreateUser.class.getSimpleName();
+
     private String username;
     private String password;
     private String firstName;
@@ -74,6 +74,7 @@ public class CreateUser extends AsyncTask<String, String, String>
 
             // Start login activity
             ctx.startActivity(mainIntent);
+
         } else
         {
             btn_CreateAccount.setEnabled(true);
@@ -118,7 +119,8 @@ public class CreateUser extends AsyncTask<String, String, String>
 
                 while (rs.next())
                 {
-                    Log.i(TAG, "doInBackground: " + rs.getString(1));
+                    Log.i(TAG, "doInBackground: Server response" + rs.getString(1));
+                    isSuccess = true;
                 }
             }
         } catch (Exception ex)

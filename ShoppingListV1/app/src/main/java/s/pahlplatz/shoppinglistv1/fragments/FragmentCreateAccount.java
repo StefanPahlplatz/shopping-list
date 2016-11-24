@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.utils.CreateUser;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 23-11-2016.
  * <p>
@@ -28,6 +26,8 @@ import static android.content.ContentValues.TAG;
 
 public class FragmentCreateAccount extends Fragment
 {
+    private static final String TAG = FragmentLogin.class.getSimpleName();
+
     private EditText et_Username, et_Password, et_PasswordConfirm, et_FirstName, et_LastName;
     private ProgressBar progressBar;
     private Button btn_CreateAccount;
@@ -43,6 +43,7 @@ public class FragmentCreateAccount extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_create_account, container, false);
 
+        // TODO: EditText added is not a TextInputEditText. Please switch to using that class instead.
         et_Username = (EditText) view.findViewById(R.id.createaccount_et_username);
         et_Password = (EditText) view.findViewById(R.id.createaccount_et_password);
         et_PasswordConfirm = (EditText) view.findViewById(R.id.createaccount_et_passwordconfirm);
@@ -79,7 +80,6 @@ public class FragmentCreateAccount extends Fragment
         return view;
     }
 
-    //TODO: set proper error messages
     private void createAccount()
     {
         // Check if the input is valid

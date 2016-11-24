@@ -17,8 +17,6 @@ import android.widget.TextView;
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.utils.AuthUser;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 22-11-2016.
  *
@@ -27,6 +25,8 @@ import static android.content.ContentValues.TAG;
 
 public class FragmentLogin extends Fragment
 {
+    private static final String TAG = FragmentLogin.class.getSimpleName();
+
     private EditText et_Username, et_Password;
     private ProgressBar progressBar;
     private Button btn_SignIn;
@@ -77,7 +77,10 @@ public class FragmentLogin extends Fragment
                 }
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.loginactivity_container, fragment).commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.loginactivity_container, fragment)
+                        .addToBackStack("loginFragment")
+                        .commit();
             }
         });
 

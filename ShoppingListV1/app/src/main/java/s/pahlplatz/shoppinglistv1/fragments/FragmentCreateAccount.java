@@ -2,6 +2,7 @@ package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,14 @@ public class FragmentCreateAccount extends Fragment
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
+
+        // TODO: Test this code.
+        android.app.ActionBar actionBar = getActivity().getActionBar();
+        if (actionBar != null)
+        {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

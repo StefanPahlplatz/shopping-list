@@ -62,9 +62,6 @@ public class MainActivity extends AppCompatActivity
             this.finish();
         } else
         {
-            Log.i(TAG, "onCreate: MainActivity created, userid = " +
-                    getSharedPreferences("settings", MODE_PRIVATE).getInt("userid", -1));
-
             // Load fragment
             if (savedInstanceState == null)
             {
@@ -113,6 +110,7 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
+            // TODO: Add "Clicking the back button twice to exit an activity"
             super.onBackPressed();
         }
     }
@@ -132,7 +130,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.action_settings)
         {
-            Log.i(TAG, "onOptionsItemSelected: Settings selected");
+            // Create login activity
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(settingsIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -37,7 +37,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         this.productsInList = productsInList;
         this.ctx = ctx;
 
-        SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = ctx.getSharedPreferences("settings", Context.MODE_PRIVATE);
         db = new Database(ctx.getResources().getString(R.string.ConnectionString)
                 , sharedPref.getInt("userid", -1));
     }

@@ -64,7 +64,10 @@ public class Database
     // TODO: Doens't work
     public void updateName(String product, String newName)
     {
-        String query = "UPDATE dbo.AllProducts SET Product='" + newName + "'WHERE Product='" + product + "'AND UserID=" + userid + "";
+        String query = "UPDATE dbo.AllProducts " +
+                "SET Product='" + newName + "' " +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid + "";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();

@@ -36,7 +36,8 @@ public class FragmentAll extends Fragment
 {
     private static final String TAG = FragmentAll.class.getSimpleName();
 
-    private ArrayList<String> products;
+    private ArrayList<String> allproducts;
+    private ArrayList<String> productsInList;
     private SwipeRefreshLayout swipeContainer;
     private ListView lv_Products;
     private Database db;
@@ -46,17 +47,16 @@ public class FragmentAll extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Assign database
+        db = new Database(getContext().getResources().getString(R.string.ConnectionString)
+                , getContext().getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_all_products, container, false);
-
-        // Assign database
-        db = new Database(getContext().getResources().getString(R.string.ConnectionString)
-                , getContext()
-                .getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
 
         // Configure ListView
         lv_Products = (ListView) view.findViewById(R.id.lv_Products);
@@ -89,7 +89,7 @@ public class FragmentAll extends Fragment
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-            menu.setHeaderTitle(products.get(info.position));
+            menu.setHeaderTitle(allproducts.get(info.position));
 
             String[] menuItems = {"Rename", "Delete"};
 
@@ -108,7 +108,7 @@ public class FragmentAll extends Fragment
         int menuItemIndex = item.getItemId();
         String[] menuItems = {"Rename", "Delete"};
         String menuItemName = menuItems[menuItemIndex];
-        final String listItemName = products.get(info.position);
+        final String listItemName = allproducts.get(info.position);
 
         switch (menuItemIndex)
         {
@@ -176,8 +176,8 @@ public class FragmentAll extends Fragment
                 Log.d(TAG, "Selected Delete");
 
                 // Remove item from client
-                products.remove(menuItemIndex);
-                lv_Products.setAdapter(new AllProductsAdapter(products, getContext()));
+                allproducts.remove(menuItemIndex);
+                lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
 
                 // Remove item from server
                 db.removeProduct(listItemName);
@@ -197,11 +197,12 @@ public class FragmentAll extends Fragment
             // Get context from param
             Context context = params[0];
 
-            // Get all products
-            products = db.getProductsNotInList();
+            // Get products
+            allproducts = db.getInfoAllProducts();
+            productsInList = db.getInfoAddProducts().get(0);
 
             // Pass the caa to onPostExecute
-            return new AllProductsAdapter(products, context);
+            return new AllProductsAdapter(allproducts, productsInList, context);
         }
 
         protected void onPostExecute(AllProductsAdapter param)

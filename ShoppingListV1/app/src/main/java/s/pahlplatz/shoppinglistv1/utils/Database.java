@@ -61,6 +61,7 @@ public class Database
         myThread.start();
     }
 
+    // TODO: Doens't work
     public void updateName(String product, String newName)
     {
         String query = "UPDATE dbo.AllProducts SET Product='" + newName + "'WHERE Product='" + product + "'AND UserID=" + userid + "";
@@ -80,7 +81,7 @@ public class Database
         myThread.start();
     }
 
-    // Return everything from dbo.AllProducts
+    // Return all items that are not in the list
     public ArrayList<String> getProductsNotInList()
     {
         ArrayList<String> products = new ArrayList<>();
@@ -167,6 +168,46 @@ public class Database
         }
 
         return list;
+    }
+
+    // Returns all Products and Amount for active items for the current user
+    public ArrayList<String> getInfoAllProducts()
+    {
+        // Create lists for products and count
+        ArrayList<String> products = new ArrayList<>();
+
+        try
+        {
+            Connection con = new ConnectionClass().CONN(conString);
+
+            if (con == null)
+            {
+                Log.e(TAG, "No internet connection");
+            }
+            else
+            {
+                String query = "SELECT Product " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "ORDER BY Product";
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    products.add(rs.getString(1));
+                }
+            }
+
+            if (con != null)
+                con.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+
+        return products;
     }
 
     private class ExecuteQuery implements Runnable

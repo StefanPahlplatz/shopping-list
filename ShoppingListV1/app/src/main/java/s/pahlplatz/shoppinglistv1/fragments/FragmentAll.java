@@ -103,7 +103,7 @@ public class FragmentAll extends Fragment
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         int menuItemIndex = item.getItemId();
         String[] menuItems = {"Rename", "Delete"};
@@ -120,6 +120,7 @@ public class FragmentAll extends Fragment
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(menuItemName);
 
+                // TODO: Make the rename box look prettier
                 // Set up the input
                 final EditText input = new EditText(getContext());
                 input.setText(listItemName);
@@ -151,8 +152,9 @@ public class FragmentAll extends Fragment
                         // Update name in server
                         db.updateName(listItemName, m_Text);
 
-                        // Update name in client
-                        new PopulateListView().execute(getContext()); //TODO: Updating the whole list from the database after renaming is very slow, just update locally
+                        allproducts.set(info.position, m_Text);
+                        lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
+                        new PopulateListView().execute(getContext());
 
                         // Product renamed!
                         Toast.makeText(getActivity(), "Product hernoemd!", Toast.LENGTH_SHORT).show();

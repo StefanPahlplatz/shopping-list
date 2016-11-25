@@ -64,7 +64,7 @@ public class Database
     // TODO: Doens't work
     public void updateName(String product, String newName)
     {
-        String query = "UPDATE dbo.AllProducts " +
+        String query = "UPDATE dbo.Products " +
                 "SET Product='" + newName + "' " +
                 "WHERE Product='" + product + "' " +
                 "AND UserID=" + userid + "";

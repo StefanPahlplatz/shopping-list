@@ -70,8 +70,6 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
             convertView = inflater.inflate(R.layout.custom_listview_allproducts, null);
         }
 
-        // TODO: Only products that are not in the list show up
-
         // Product name
         TextView tv_Product = (TextView) convertView.findViewById(R.id.list_item);
         tv_Product.setText(allproducts.get(position));

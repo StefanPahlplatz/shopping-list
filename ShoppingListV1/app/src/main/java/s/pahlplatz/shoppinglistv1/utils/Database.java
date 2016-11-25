@@ -61,7 +61,6 @@ public class Database
         myThread.start();
     }
 
-    // TODO: Doens't work
     public void updateName(String product, String newName)
     {
         String query = "UPDATE dbo.Products " +
@@ -77,6 +76,17 @@ public class Database
     {
         String query = "UPDATE dbo.Products " +
                 "SET IsInList=(IsInList^1), Amount=1, Checked=0" +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid;
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
+    public void updateCheckedState(String product)
+    {
+        String query = "UPDATE dbo.Products " +
+                "SET Checked=(Checked^1) " +
                 "WHERE Product='" + product + "' " +
                 "AND UserID=" + userid;
 
@@ -211,6 +221,56 @@ public class Database
         }
 
         return products;
+    }
+
+    // Returns all Products and Amount for active items for the current user
+    public ArrayList<ArrayList> getInfoCheckList()
+    {
+        // Create lists for products and count
+        ArrayList<String> products = new ArrayList<>();
+        ArrayList<Integer> count = new ArrayList<>();
+        ArrayList<Integer> checked = new ArrayList<>();
+
+        ArrayList<ArrayList> list = new ArrayList<>();
+        list.add(products);
+        list.add(count);
+        list.add(checked);
+
+        try
+        {
+            Connection con = new ConnectionClass().CONN(conString);
+
+            if (con == null)
+            {
+                Log.e(TAG, "No internet connection");
+            }
+            else
+            {
+                String query = "SELECT Product, Amount, Checked " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "AND IsInList=1" +
+                        "ORDER BY Product";
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    products.add(rs.getString(1));
+                    count.add(rs.getInt(2));
+                    checked.add(rs.getInt(3));
+                }
+            }
+
+            if (con != null)
+                con.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+
+        return list;
     }
 
     private class ExecuteQuery implements Runnable

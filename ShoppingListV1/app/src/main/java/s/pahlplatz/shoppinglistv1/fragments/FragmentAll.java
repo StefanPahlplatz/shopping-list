@@ -37,7 +37,7 @@ public class FragmentAll extends Fragment
     private static final String TAG = FragmentAll.class.getSimpleName();
 
     private ArrayList<String> allproducts;
-    private ArrayList<String> productsInList;
+    private ArrayList productsInList;
     private SwipeRefreshLayout swipeContainer;
     private ListView lv_Products;
     private Database db;
@@ -177,12 +177,13 @@ public class FragmentAll extends Fragment
             case 1:
                 Log.d(TAG, "Selected Delete");
 
+                // Remove item from server
+                db.removeProduct(listItemName);
+
                 // Remove item from client
                 allproducts.remove(menuItemIndex);
                 lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
 
-                // Remove item from server
-                db.removeProduct(listItemName);
 
                 Toast.makeText(getActivity(), "Product deleted!", Toast.LENGTH_SHORT).show();
                 break;

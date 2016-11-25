@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentAdd;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentAll;
+import s.pahlplatz.shoppinglistv1.fragments.FragmentCheckList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = FragmentAll.class;
                 break;
             case R.id.nav_list:
-                //fragmentClass = FragmentList.class;
+                fragmentClass = FragmentCheckList.class;
                 break;
             default:
         }

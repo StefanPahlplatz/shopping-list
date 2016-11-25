@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by Stefan on 22-11-2016.
  *
@@ -20,6 +18,8 @@ import static android.content.ContentValues.TAG;
 
 public class Database
 {
+    private static final String TAG = Database.class.getSimpleName();
+
     private String conString;
     private Integer userid;
 
@@ -34,7 +34,7 @@ public class Database
         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(new Date());
 
         String query = "INSERT INTO dbo.Products (UserID, Product, Amount, Date, Checked, IsInList) "
-                + "VALUES (userid,'" + product + "',1,'" + date + "',0,1)";
+                + "VALUES (" + userid + ",'" + product + "',1,'" + date + "',0,1)";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -48,9 +48,14 @@ public class Database
         myThread.start();
     }
 
-    public void updateCount(String product, Integer newCount)
+    public void updateCount(String product, boolean increment)
     {
-        String query = "UPDATE dbo.Products SET Amount=" + newCount + "WHERE Product='" + product + "' AND UserID=" + userid + "";
+        String update = increment ? "SET Amount=Amount+1" : "SET Amount=Amount-1 ";
+
+        String query = "UPDATE dbo.Products " +
+                update +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid;
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
@@ -58,14 +63,39 @@ public class Database
 
     public void updateName(String product, String newName)
     {
-        String query = "UPDATE dbo.AllProducts SET Product='" + newName + "'WHERE Product='" + product + "'AND UserID=" + userid + "";
+        String query = "UPDATE dbo.Products " +
+                "SET Product='" + newName + "' " +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid + "";
 
         Thread myThread = new Thread(new ExecuteQuery(query));
         myThread.start();
     }
 
-    // Return everything from dbo.AllProducts
-    public ArrayList<String> getAllProducts()
+    public void updateIsInList(String product)
+    {
+        String query = "UPDATE dbo.Products " +
+                "SET IsInList=(IsInList^1), Amount=1, Checked=0" +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid;
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
+    public void updateCheckedState(String product)
+    {
+        String query = "UPDATE dbo.Products " +
+                "SET Checked=(Checked^1) " +
+                "WHERE Product='" + product + "' " +
+                "AND UserID=" + userid;
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
+    // Return all items that are not in the list
+    public ArrayList<String> getProductsNotInList()
     {
         ArrayList<String> products = new ArrayList<>();
 
@@ -79,7 +109,100 @@ public class Database
             }
             else
             {
-                String query = "select * from dbo.Products WHERE UserID=" + userid + " ORDER BY Product";
+                String query = "SELECT Product " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "AND IsInList = 0 " +
+                        "ORDER BY Product";
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    products.add(rs.getString(1));
+                }
+            }
+
+            if (con != null)
+                con.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, "getAutoCompleteItems: Error while retrieving items from database", ex);
+        }
+
+        return products;
+    }
+
+    // Returns all Products and Amount for active items for the current user
+    public ArrayList<ArrayList> getInfoAddProducts()
+    {
+        // Create lists for products and count
+        ArrayList<String> products = new ArrayList<>();
+        ArrayList<Integer> count = new ArrayList<>();
+
+        ArrayList<ArrayList> list = new ArrayList<>();
+
+        // Add all lists to main list
+        list.add(products);
+        list.add(count);
+
+        try
+        {
+            Connection con = new ConnectionClass().CONN(conString);
+
+            if (con == null)
+            {
+                Log.e(TAG, "No internet connection");
+            }
+            else
+            {
+                String query = "SELECT Product, Amount " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "AND IsInList=1 " +
+                        "ORDER BY Product";
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    products.add(rs.getString(1));
+                    count.add(rs.getInt(2));
+                }
+            }
+
+            if (con != null)
+                con.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+
+        return list;
+    }
+
+    // Returns all Products and Amount for active items for the current user
+    public ArrayList<String> getInfoAllProducts()
+    {
+        // Create lists for products and count
+        ArrayList<String> products = new ArrayList<>();
+
+        try
+        {
+            Connection con = new ConnectionClass().CONN(conString);
+
+            if (con == null)
+            {
+                Log.e(TAG, "No internet connection");
+            }
+            else
+            {
+                String query = "SELECT Product " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "ORDER BY Product";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
@@ -100,21 +223,17 @@ public class Database
         return products;
     }
 
-    // Return everything from dbo.Products
-    public ArrayList<ArrayList> getAllInfo()
+    // Returns all Products and Amount for active items for the current user
+    public ArrayList<ArrayList> getInfoCheckList()
     {
-        // Create lists for every column
+        // Create lists for products and count
         ArrayList<String> products = new ArrayList<>();
         ArrayList<Integer> count = new ArrayList<>();
-        ArrayList<String> date = new ArrayList<>();
         ArrayList<Integer> checked = new ArrayList<>();
 
         ArrayList<ArrayList> list = new ArrayList<>();
-
-        // Add all lists to main list
         list.add(products);
         list.add(count);
-        list.add(date);
         list.add(checked);
 
         try
@@ -127,16 +246,19 @@ public class Database
             }
             else
             {
-                String query = "select * from dbo.Products WHERE UserID=" + userid + " ORDER BY Product";
+                String query = "SELECT Product, Amount, Checked " +
+                        "FROM dbo.Products " +
+                        "WHERE UserID=" + userid +
+                        "AND IsInList=1" +
+                        "ORDER BY Product";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
                 while(rs.next())
                 {
-                    products.add(rs.getString(2));
-                    count.add(rs.getInt(3));
-                    date.add(rs.getString(4));
-                    checked.add(rs.getInt(5));
+                    products.add(rs.getString(1));
+                    count.add(rs.getInt(2));
+                    checked.add(rs.getInt(3));
                 }
             }
 
@@ -175,7 +297,7 @@ public class Database
                 {
                     Statement stmt = con.createStatement();
                     stmt.execute(query);
-                    Log.d(TAG, "SQL operation successful");
+                    Log.d(TAG, "SQL operation successful: " + query);
                 }
 
                 if (con != null)
@@ -183,7 +305,7 @@ public class Database
             }
             catch (Exception ex)
             {
-                Log.e(TAG, ex.toString());
+                Log.e(TAG, "run: Couldn't add product to server", ex);
             }
         }
     }

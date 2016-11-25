@@ -1,5 +1,6 @@
 package s.pahlplatz.shoppinglistv1.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
@@ -27,31 +28,30 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
 {
     private final Context ctx;
     private final Database db;
-    private ArrayList<String> products;             // All products
-    private ArrayList<String> productsInCurrent;    // Products that are in the 'current' list
+    private ArrayList<String> allproducts;
+    private ArrayList<String> productsInList;
 
-    public AllProductsAdapter(ArrayList<String> products, Context ctx)
+    public AllProductsAdapter(ArrayList<String> allproducts, ArrayList<String> productsInList, Context ctx)
     {
-        this.products = products;
+        this.allproducts = allproducts;
+        this.productsInList = productsInList;
         this.ctx = ctx;
 
-        SharedPreferences sharedPref = ctx.getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
-        db = new Database(ctx.getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
 
-        // TODO: GET PRODUCTSINCURRENT LIST FROM DATABASE
-        // productsInCurrent = db.
+        db = new Database(ctx.getResources().getString(R.string.ConnectionString)
+                , ctx.getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }
 
     @Override
     public int getCount()
     {
-        return products.size();
+        return allproducts.size();
     }
 
     @Override
     public Object getItem(int pos)
     {
-        return products.get(pos);
+        return allproducts.get(pos);
     }
 
     @Override
@@ -60,6 +60,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         return 0;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
@@ -71,13 +72,13 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
 
         // Product name
         TextView tv_Product = (TextView) convertView.findViewById(R.id.list_item);
-        tv_Product.setText(products.get(position));
+        tv_Product.setText(allproducts.get(position));
 
         final Button btn_Add = (Button) convertView.findViewById(R.id.btn_AddItem);
         final RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.rl_allproducts_item);
 
         // If the product is in the current list
-        if (productsInCurrent.contains(products.get(position)))
+        if (productsInList.contains(allproducts.get(position)))
         {
             rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAlreadyInList));
             btn_Add.setVisibility(View.INVISIBLE);
@@ -93,7 +94,7 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
                 {
                     rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAlreadyInList));
                     btn_Add.setVisibility(View.INVISIBLE);
-                    db.addProduct(products.get(position));
+                    db.updateIsInList(allproducts.get(position));
                 }
             });
         }

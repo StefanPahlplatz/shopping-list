@@ -2,7 +2,6 @@ package s.pahlplatz.shoppinglistv1.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,7 +36,8 @@ public class FragmentAll extends Fragment
 {
     private static final String TAG = FragmentAll.class.getSimpleName();
 
-    private ArrayList<String> products;
+    private ArrayList<String> allproducts;
+    private ArrayList productsInList;
     private SwipeRefreshLayout swipeContainer;
     private ListView lv_Products;
     private Database db;
@@ -47,6 +47,10 @@ public class FragmentAll extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Assign database
+        db = new Database(getContext().getResources().getString(R.string.ConnectionString)
+                , getContext().getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }
 
     @Override
@@ -54,14 +58,13 @@ public class FragmentAll extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_all_products, container, false);
 
-        SharedPreferences sharedPref = getContext().getSharedPreferences("pahlplatz.s", Context.MODE_PRIVATE);
-        db = new Database(getContext().getResources().getString(R.string.ConnectionString), sharedPref.getInt("userid", -1));
-
+        // Configure ListView
         lv_Products = (ListView) view.findViewById(R.id.lv_Products);
         lv_Products.setLongClickable(true);
         registerForContextMenu(lv_Products);
         new PopulateListView().execute(getContext());
 
+        // Configure the SwipeRefreshLayout
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -71,8 +74,6 @@ public class FragmentAll extends Fragment
                 new PopulateListView().execute(getContext());
             }
         });
-
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -88,9 +89,9 @@ public class FragmentAll extends Fragment
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-            menu.setHeaderTitle(products.get(info.position));
+            menu.setHeaderTitle(allproducts.get(info.position));
 
-            String[] menuItems = {"Hernoemen", "Verwijderen"};
+            String[] menuItems = {"Rename", "Delete"};
 
             for (int i = 0; i < menuItems.length; i++)
             {
@@ -102,12 +103,12 @@ public class FragmentAll extends Fragment
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         int menuItemIndex = item.getItemId();
         String[] menuItems = {"Rename", "Delete"};
         String menuItemName = menuItems[menuItemIndex];
-        final String listItemName = products.get(info.position);
+        final String listItemName = allproducts.get(info.position);
 
         switch (menuItemIndex)
         {
@@ -119,6 +120,7 @@ public class FragmentAll extends Fragment
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(menuItemName);
 
+                // TODO: Make the rename box look prettier
                 // Set up the input
                 final EditText input = new EditText(getContext());
                 input.setText(listItemName);
@@ -150,8 +152,9 @@ public class FragmentAll extends Fragment
                         // Update name in server
                         db.updateName(listItemName, m_Text);
 
-                        // Update name in client
-                        new PopulateListView().execute(getContext()); //TODO: Updating after renaming is very slow, just update locally
+                        allproducts.set(info.position, m_Text);
+                        lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
+                        new PopulateListView().execute(getContext());
 
                         // Product renamed!
                         Toast.makeText(getActivity(), "Product hernoemd!", Toast.LENGTH_SHORT).show();
@@ -174,12 +177,13 @@ public class FragmentAll extends Fragment
             case 1:
                 Log.d(TAG, "Selected Delete");
 
-                // Remove item from client
-                products.remove(menuItemIndex);
-                lv_Products.setAdapter(new AllProductsAdapter(products, getContext()));
-
                 // Remove item from server
                 db.removeProduct(listItemName);
+
+                // Remove item from client
+                allproducts.remove(menuItemIndex);
+                lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
+
 
                 Toast.makeText(getActivity(), "Product deleted!", Toast.LENGTH_SHORT).show();
                 break;
@@ -196,11 +200,12 @@ public class FragmentAll extends Fragment
             // Get context from param
             Context context = params[0];
 
-            // Get all products
-            products = db.getAllProducts();
+            // Get products
+            allproducts = db.getInfoAllProducts();
+            productsInList = db.getInfoAddProducts().get(0);
 
             // Pass the caa to onPostExecute
-            return new AllProductsAdapter(products, context);
+            return new AllProductsAdapter(allproducts, productsInList, context);
         }
 
         protected void onPostExecute(AllProductsAdapter param)

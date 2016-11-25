@@ -10,43 +10,43 @@
         android:padding="8dp">
 
     <AutoCompleteTextView
-        android:text=""
-        android:hint="@string/hint"
+        android:id="@+id/add_product_autoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/autoCompleteTextView"
-        android:layout_toLeftOf="@+id/btn_Add"
-        android:layout_toStartOf="@+id/btn_Add"/>
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/add_product_btn_add"
+        android:layout_toStartOf="@+id/add_product_btn_add"
+        android:hint="@string/hint"
+        android:text=""/>
 
     <Button
-        android:text="@string/addProduct"
+        android:id="@+id/add_product_btn_add"
         android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/btn_Add"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/addProduct"
         android:textSize="12sp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeContainer"
+        android:id="@+id/add_product_swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/autoCompleteTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/add_product_autoCompleteTextView">
 
     <ListView
-        android:id="@+id/lv_Products"
+        android:id="@+id/add_product_lv_Products"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/autoCompleteTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/add_product_autoCompleteTextView"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>

@@ -1,6 +1,9 @@
 package s.pahlplatz.shoppinglistv1.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,6 +26,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import s.pahlplatz.shoppinglistv1.R;
+import s.pahlplatz.shoppinglistv1.activities.SettingsActivity;
 import s.pahlplatz.shoppinglistv1.adapters.AddProductAdapter;
 import s.pahlplatz.shoppinglistv1.utils.Database;
 
@@ -196,6 +203,72 @@ public class FragmentAdd extends Fragment
         });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        // Clear menu from mainActivity
+        menu.clear();
+
+        // Create menu
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings)
+        {
+            // Create login activity
+            Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+            settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(settingsIntent);
+            return true;
+        }
+        else if(id == R.id.action_clear)
+        {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    switch(which)
+                    {
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                        case DialogInterface.BUTTON_POSITIVE:
+                            if (list.get(0).size() > 0)
+                            {
+                                // Remove from server
+                                db.updateIsInListAll();
+
+                                // Remove from client
+                                list.get(0).clear();
+                                list.get(1).clear();
+                                list.get(2).clear();
+
+                                Toast.makeText(getContext(), "List cleared", Toast.LENGTH_SHORT).show();
+                            } else
+                            {
+                                Toast.makeText(getContext(), "Already empty", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                    }
+                }
+            };
+
+            // Show Yes/No dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
+
+        // Return selected item
+        return super.onOptionsItemSelected(item);
     }
 
     // Fill the ListView with data from the database

@@ -83,6 +83,17 @@ public class Database
         myThread.start();
     }
 
+    public void updateIsInListAll()
+    {
+        String query = "UPDATE dbo.Products " +
+                "SET IsInList=0, Amount=1, Checked=0" +
+                "WHERE IsInList=1 " +
+                "AND UserID=" + userid;
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
     public void updateCheckedState(String product)
     {
         String query = "UPDATE dbo.Products " +

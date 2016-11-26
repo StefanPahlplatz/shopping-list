@@ -131,7 +131,7 @@ public class FragmentAdd extends Fragment
         });
 
         // Fill the list
-        new PopulateAutoComplete().execute();
+        new PopulateAutoComplete().execute(getContext());
 
         // Configure add button
         btn_Add = (Button) view.findViewById(R.id.add_product_btn_add);
@@ -205,13 +205,13 @@ public class FragmentAdd extends Fragment
         protected AddProductAdapter doInBackground(Context... params)
         {
             // Get context from param
-            Context context = params[0];
+            Context ctx = params[0];
 
             // Get list from database
             list = db.getInfoAddProducts();
 
             // Pass the adapter to onPostExecute
-            return new AddProductAdapter(list.get(0),list.get(1), context);
+            return new AddProductAdapter(list.get(0),list.get(1), ctx);
         }
 
         protected void onPostExecute(AddProductAdapter param)
@@ -228,26 +228,36 @@ public class FragmentAdd extends Fragment
     }
 
     // Assign adapter for the AutoCompleteTextView
-    private class PopulateAutoComplete extends AsyncTask<Void, Void, ArrayAdapter>
+    private class PopulateAutoComplete extends AsyncTask<Context, Void, ArrayAdapter>
     {
-        private PopulateAutoComplete()
-        {
-            super();
-        }
-
         @SuppressWarnings("unchecked")
-        protected ArrayAdapter doInBackground(Void... params)
+        protected ArrayAdapter doInBackground(Context... params)
         {
-            // Get all products from database
-            productsNotInList = db.getProductsNotInList();
+            try
+            {
+                // Get context from param
+                Context ctx = params[0];
 
-            return new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, productsNotInList);
+                // Get all products from database
+                productsNotInList = db.getProductsNotInList();
+
+                if (productsNotInList.size() == 0)
+                    return null;
+                else
+                    return new ArrayAdapter(ctx, android.R.layout.simple_list_item_1, productsNotInList);
+            } catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(ArrayAdapter adapter)
         {
-            actv_Product.setAdapter(adapter);
+            if (adapter != null)
+            {
+                actv_Product.setAdapter(adapter);
+            }
         }
     }
 }

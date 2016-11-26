@@ -1,14 +1,11 @@
 USE [shoppinglistdb]
 GO
-
-/****** Object:  StoredProcedure [dbo].[uspLogin]    Script Date: 23-11-2016 11:12:16 ******/
+/****** Object:  StoredProcedure [dbo].[uspLogin]    Script Date: 26-11-2016 22:17:29 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
-CREATE PROCEDURE [dbo].[uspLogin]
+ALTER PROCEDURE [dbo].[uspLogin]
     @pLoginName NVARCHAR(254),
     @pPassword NVARCHAR(50),
     @responseMessage NVARCHAR(250)='' OUTPUT
@@ -26,10 +23,9 @@ BEGIN
        IF(@userID IS NULL)
            SET @responseMessage='Incorrect password'
        ELSE 
-           SET @responseMessage='User successfully logged in'
+           SET @responseMessage=@UserID
     END
     ELSE
        SET @responseMessage='Invalid login'
 
 END
-GO

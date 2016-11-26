@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentAdd;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private boolean doubleBackToExitPressedOnce = false;
 
     private static void hideKeyboard(Context ctx)
     {
@@ -87,7 +91,6 @@ public class MainActivity extends AppCompatActivity
 
             // Create DrawerLayout
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            // TODO: Display name of the user in the DrawerLayout. (TextView header_main_subtext)
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                     R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(toggle);
@@ -110,8 +113,22 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            // TODO: Add "Clicking the back button twice to exit an activity"
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
     }
 
@@ -157,22 +174,17 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_list:
                 fragmentClass = FragmentCheckList.class;
                 break;
-            default:
         }
         try
         {
-            // TODO: Remove whole null checking block when FragmentList is implemented.
             if (fragmentClass != null)
             {
                 fragment = (Fragment) fragmentClass.newInstance();
-            } else
-            {
-                throw new NullPointerException();
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            e.printStackTrace();
+            Log.e(TAG, "onNavigationItemSelected: Couldn't create fragment", ex);
         }
 
         // Switch fragment

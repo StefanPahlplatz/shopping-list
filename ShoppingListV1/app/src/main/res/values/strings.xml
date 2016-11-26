@@ -10,7 +10,7 @@
     <string name="action_clear">Clear list</string>
 
     <!-- Main content page -->
-    <string name="hint">Wat is er op?</string>
+    <string name="hint">What did you run out of?</string>
     <string name="addProduct">Add</string>
 
     <!-- Strings related to login -->
@@ -93,8 +93,8 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="de_boodschappen_app">De Boodschappen App</string>
-    <string name="credits">Door Stefan Pahlplatz</string>
+    <string name="de_boodschappen_app">The Shopping List</string>
+    <string name="credits">By Stefan Pahlplatz</string>
     <string name="placeholdertext">placeholdertext</string>
     <string name="placeholdervalue">11</string>
 </resources>

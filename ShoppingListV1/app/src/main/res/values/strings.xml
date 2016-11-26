@@ -101,4 +101,8 @@
     <string name="confirm_password">Confirm password</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
+    <string name="view_current_list">View current list</string>
+    <string name="view_all_products">View all products</string>
+    <string name="add_product">Add product</string>
+    <string name="settings">Settings</string>
 </resources>

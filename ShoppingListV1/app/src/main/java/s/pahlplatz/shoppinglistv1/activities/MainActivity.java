@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
         hideKeyboard(this);
-        Fragment fragment = null;
+        Fragment fragment;
         Class fragmentClass = null;
 
         switch(item.getItemId())
@@ -174,22 +174,27 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_list:
                 fragmentClass = FragmentCheckList.class;
                 break;
+            case R.id.nav_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(settingsIntent);
+                break;
         }
         try
         {
             if (fragmentClass != null)
             {
                 fragment = (Fragment) fragmentClass.newInstance();
+
+                // Switch fragment
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
             }
         }
         catch (Exception ex)
         {
             Log.e(TAG, "onNavigationItemSelected: Couldn't create fragment", ex);
         }
-
-        // Switch fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
         // Close drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

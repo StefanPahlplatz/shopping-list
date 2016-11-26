@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -82,18 +81,29 @@ public class FragmentCheckList extends Fragment
                 ArrayList<Integer> itemsToDelete = adapter.getSelected();
 
                 if (itemsToDelete.size() == 0)
+                {
                     Toast.makeText(getContext(), "Select 1 or more products first", Toast.LENGTH_SHORT).show();
-                else {
-                    for (int i = 0; i < itemsToDelete.size(); i++) {
+                } else
+                {
+                    for (int i = 0; i < itemsToDelete.size(); i++)
+                    {
                         int index = itemsToDelete.get(i);
-                        for (int j = 0; j < list.size(); j++)
-                        {
-                            list.get(j).remove(index);
-                        }
-                        adapter = new CheckListAdapter(list.get(0), list.get(1), list.get(2),  getContext());
-                        lv_Products.setAdapter(adapter);
+
+                        // Update in server
+                        db.updateIsInList(list.get(0).get(index).toString());
+
+                        // Remove from local lists
+                        list.get(0).remove(index);
+                        list.get(1).remove(index);
+                        list.get(2).remove(index);
                     }
-                    Toast.makeText(getContext(), "Product removed!", Toast.LENGTH_SHORT).show();
+
+                    // Assign new adapter
+                    lv_Products.setAdapter(new CheckListAdapter(list.get(0), list.get(1), list.get(2), getContext()));
+
+                    Toast.makeText(getContext()
+                            , (itemsToDelete.size() == 1 ? "Product" : "Products") + " removed"
+                            , Toast.LENGTH_SHORT).show();
                 }
             }
         });

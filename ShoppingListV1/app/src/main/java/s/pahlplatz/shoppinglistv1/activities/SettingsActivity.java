@@ -2,6 +2,7 @@ package s.pahlplatz.shoppinglistv1.activities;
 
 
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -148,11 +150,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
             bindPreferenceSummaryToValue(findPreference("theme"));
+            Preference theme = findPreference("theme");
+            theme.setSummary("White");
+            theme.setEnabled(false);
+
         }
 
         @Override
@@ -183,7 +185,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
             setHasOptionsMenu(true);
 
             Preference logout = findPreference("logout");
-            logout.setSummary("Logged in as " + getContext().getSharedPreferences("settings", Context.MODE_PRIVATE).getString("name", ""));
+            logout.setSummary("Logged in as " + getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).getString("name", ""));
             logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
             {
                 @Override
@@ -197,14 +199,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity
                             if (which ==  DialogInterface.BUTTON_POSITIVE)
                             {
                                 // Remove userid and name from SharedPreferences
-                                getContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
+                                getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
                                         .edit()
                                         .remove("userid")
                                         .remove("name")
                                         .apply();
 
                                 // Start login intent
-                                Intent loginIntent = new Intent(getContext(), LoginActivity.class);
+                                Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
                                 loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(loginIntent);
                                 getActivity().finish();
@@ -212,7 +214,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
                         }
                     };
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Are you sure you want to log out?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
 

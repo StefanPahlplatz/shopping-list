@@ -83,6 +83,17 @@ public class Database
         myThread.start();
     }
 
+    public void updateIsInListAll()
+    {
+        String query = "UPDATE dbo.Products " +
+                "SET IsInList=0, Amount=1, Checked=0" +
+                "WHERE IsInList=1 " +
+                "AND UserID=" + userid;
+
+        Thread myThread = new Thread(new ExecuteQuery(query));
+        myThread.start();
+    }
+
     public void updateCheckedState(String product)
     {
         String query = "UPDATE dbo.Products " +
@@ -271,6 +282,45 @@ public class Database
         }
 
         return list;
+    }
+
+    // Returns all Products and Amount for active items for the current user
+    public String getName()
+    {
+        String name = "";
+
+        try
+        {
+            Connection con = new ConnectionClass().CONN(conString);
+
+            if (con == null)
+            {
+                Log.e(TAG, "No internet connection");
+            }
+            else
+            {
+                String query = "SELECT FirstName, LastName " +
+                        "FROM dbo.Users " +
+                        "WHERE UserID="+userid;
+
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    name = rs.getString(1) + " " + rs.getString(2);
+                }
+            }
+
+            if (con != null)
+                con.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+
+        return name;
     }
 
     private class ExecuteQuery implements Runnable

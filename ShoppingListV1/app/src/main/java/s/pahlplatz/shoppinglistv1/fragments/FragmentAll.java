@@ -120,7 +120,6 @@ public class FragmentAll extends Fragment
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(menuItemName);
 
-                // TODO: Make the rename box look prettier
                 // Set up the input
                 final EditText input = new EditText(getContext());
                 input.setText(listItemName);
@@ -157,9 +156,7 @@ public class FragmentAll extends Fragment
                         new PopulateListView().execute(getContext());
 
                         // Product renamed!
-                        Toast.makeText(getActivity(), "Product hernoemd!", Toast.LENGTH_SHORT).show();
-
-                        //TODO: What if the changed name is already in the main list?
+                        Toast.makeText(getActivity(), "Product renamed!", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,6 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
     private ArrayList<Integer> checked = new ArrayList<>();
     private Context ctx;
     private Database db;
-    private RelativeLayout relativeLayout;
-    private CheckBox checkBox;
 
     public CheckListAdapter(ArrayList<String> products, ArrayList<Integer> count
             , ArrayList<Integer> checked, Context ctx)
@@ -85,12 +84,13 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
         TextView listItemCount = (TextView) view.findViewById(R.id.list_item_count_final);
         listItemCount.setText(String.format(count.get(position).toString()));
 
-        relativeLayout = (RelativeLayout) view.findViewById(R.id.all_products_relativelayout);
-        checkBox = (CheckBox) view.findViewById(R.id.cb_Gottem);
+        final RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.all_products_relativelayout);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.cb_Gottem);
 
         checkBox.setChecked(checked.get(position) == 1);
         relativeLayout.setBackgroundColor(checkBox.isChecked()
-                ? Color.parseColor("#f1f1f1") : Color.parseColor("#fafafa"));
+                ? ContextCompat.getColor(ctx, R.color.colorAlreadyInList)
+                : ContextCompat.getColor(ctx, R.color.colorNotInList));
 
         // Clicking anywhere in the relativelayout will trigger the checkbox click
         checkBox.setOnClickListener(new View.OnClickListener()
@@ -98,7 +98,7 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
             @Override
             public void onClick(View v)
             {
-                updateState(position);
+                updateState(position, relativeLayout, checkBox);;
             }
         });
         relativeLayout.setOnClickListener(new View.OnClickListener()
@@ -107,7 +107,7 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
             public void onClick(View v)
             {
                 checkBox.setChecked(!checkBox.isChecked());
-                updateState(position);
+                updateState(position, relativeLayout, checkBox);
             }
         });
         listItemText.setOnClickListener(new View.OnClickListener()
@@ -116,7 +116,7 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
             public void onClick(View v)
             {
                 checkBox.setChecked(!checkBox.isChecked());
-                updateState(position);
+                updateState(position, relativeLayout, checkBox);
             }
         });
         listItemCount.setOnClickListener(new View.OnClickListener()
@@ -125,14 +125,14 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
             public void onClick(View v)
             {
                 checkBox.setChecked(!checkBox.isChecked());
-                updateState(position);
+                updateState(position, relativeLayout, checkBox);
             }
         });
 
         return view;
     }
 
-    private void updateState(int position)
+    private void updateState(int position, RelativeLayout relativeLayout, CheckBox checkBox)
     {
         // Update checked state in server
         db.updateCheckedState(products.get(position));
@@ -140,7 +140,8 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter
 
         // Update background colour
         relativeLayout.setBackgroundColor(checkBox.isChecked()
-                ? Color.parseColor("#f1f1f1") : Color.parseColor("#fafafa"));
+                ? ContextCompat.getColor(ctx, R.color.colorAlreadyInList)
+                : ContextCompat.getColor(ctx, R.color.colorNotInList));
     }
 
     public ArrayList<Integer> getSelected()

@@ -128,11 +128,7 @@ public class AuthUser extends AsyncTask<String, String, String>
         {
             // Create main activity
             Intent mainIntent = new Intent(ctx, MainActivity.class);
-
-            // Prevent backwards navigation
             mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            // Start login activity
             ctx.startActivity(mainIntent);
         } else
         {

@@ -1,0 +1,13 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="s.pahlplatz.shoppinglistv1.activities.SettingsActivity$GeneralPreferenceFragment"
+        android:icon="@drawable/ic_info_black_24dp"
+        android:title="@string/pref_header_general"/>
+
+    <header
+        android:fragment="s.pahlplatz.shoppinglistv1.activities.SettingsActivity$AccountPreferenceFragment"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/pref_header_account"/>
+
+</preference-headers>

@@ -6,13 +6,8 @@
         android:title="@string/pref_header_general"/>
 
     <header
-        android:fragment="s.pahlplatz.shoppinglistv1.activities.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/pref_header_notifications"/>
-
-    <header
-        android:fragment="s.pahlplatz.shoppinglistv1.activities.SettingsActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync"/>
+        android:fragment="s.pahlplatz.shoppinglistv1.activities.SettingsActivity$AccountPreferenceFragment"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/pref_header_account"/>
 
 </preference-headers>

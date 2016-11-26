@@ -3,6 +3,7 @@ package s.pahlplatz.shoppinglistv1.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentAdd;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentAll;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentCheckList;
+import s.pahlplatz.shoppinglistv1.utils.Database;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -57,15 +59,16 @@ public class MainActivity extends AppCompatActivity
         {
             // Create login activity
             Intent loginIntent = new Intent(this, LoginActivity.class);
-
-            // Prevent backwards navigation
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            // Start login activity
             startActivity(loginIntent);
             this.finish();
         } else
         {
+            if (getSharedPreferences("settings", MODE_PRIVATE).getString("name", "").equals(""))
+            {
+                new GetName().execute();
+            }
+
             // Load fragment
             if (savedInstanceState == null)
             {
@@ -201,5 +204,27 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    // Fill the ListView with data from the database
+    private class GetName extends AsyncTask<Void, Void, String>
+    {
+        protected String doInBackground(Void... params)
+        {
+            Database db = new Database(getString(R.string.ConnectionString)
+                    , getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
+
+            String name = db.getName();
+
+            return name;
+        }
+
+        protected void onPostExecute(String result)
+        {
+            getSharedPreferences("settings", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("name", result)
+                    .apply();
+        }
     }
 }

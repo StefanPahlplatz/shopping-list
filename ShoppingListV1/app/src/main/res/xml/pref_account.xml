@@ -1,0 +1,11 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:persistent="true"
+        android:defaultValue="0"
+        android:negativeButtonText="No"
+        android:positiveButtonText="Yes"
+        android:key="logout"
+        android:title="Log out"/>
+
+</PreferenceScreen>

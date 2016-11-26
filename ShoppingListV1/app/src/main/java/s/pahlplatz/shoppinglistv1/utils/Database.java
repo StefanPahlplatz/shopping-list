@@ -284,6 +284,45 @@ public class Database
         return list;
     }
 
+    // Returns all Products and Amount for active items for the current user
+    public String getName()
+    {
+        String name = "";
+
+        try
+        {
+            Connection con = new ConnectionClass().CONN(conString);
+
+            if (con == null)
+            {
+                Log.e(TAG, "No internet connection");
+            }
+            else
+            {
+                String query = "SELECT FirstName, LastName " +
+                        "FROM dbo.Users " +
+                        "WHERE UserID="+userid;
+
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+
+                while(rs.next())
+                {
+                    name = rs.getString(1) + " " + rs.getString(2);
+                }
+            }
+
+            if (con != null)
+                con.close();
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+
+        return name;
+    }
+
     private class ExecuteQuery implements Runnable
     {
         String query;

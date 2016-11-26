@@ -107,20 +107,21 @@ public class FragmentLogin extends Fragment
         // Verify credentials
         if (et_Username.getEditText().getText().toString().isEmpty())
         {
-            et_Username.getEditText().setError("Please enter your username");
+            et_Username.getEditText().setError("Please enter your group name");
             et_Username.requestFocus();
         } else if (et_Password.getEditText().getText().toString().isEmpty())
         {
             et_Password.getEditText().setError("Please enter your password");
             et_Password.requestFocus();
+        } else
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            btn_SignIn.setEnabled(false);
+
+            // Start login procedure
+            new AuthUser(et_Username.getEditText().getText().toString()
+                    , et_Password.getEditText().getText().toString()
+                    , getContext(), progressBar, btn_SignIn).execute();
         }
-
-        progressBar.setVisibility(View.VISIBLE);
-        btn_SignIn.setEnabled(false);
-
-        // Start login procedure
-        new AuthUser(et_Username.getEditText().getText().toString()
-                , et_Password.getEditText().getText().toString()
-                , getContext(), progressBar, btn_SignIn).execute();
     }
 }

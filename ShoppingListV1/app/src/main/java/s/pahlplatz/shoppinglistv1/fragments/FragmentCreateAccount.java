@@ -36,14 +36,6 @@ public class FragmentCreateAccount extends Fragment
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
-
-        // TODO: Test this code.
-        android.app.ActionBar actionBar = getActivity().getActionBar();
-        if (actionBar != null)
-        {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override

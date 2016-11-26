@@ -80,7 +80,6 @@ public class FragmentAdd extends Fragment
 
         // Configure AutoCompleteTextView
         actv_Product = (AutoCompleteTextView) view.findViewById(R.id.add_product_autoCompleteTextView);
-        // TODO: If you enter text and the listview updates, then pull down the listview the listview will be reset.
         actv_Product.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -178,7 +177,6 @@ public class FragmentAdd extends Fragment
                     db.addProduct(product);
                 }
 
-                // TODO: Cleaner way of updating the ListView?
                 // Create custom lists
                 ArrayList<String> customProducts = list.get(0);
                 ArrayList<Integer> customCount = list.get(1);

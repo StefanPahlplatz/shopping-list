@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
-        android:text="Create account"
+        android:text="@string/create_group"
         android:textSize="20sp"/>
 
     <android.support.design.widget.TextInputLayout
@@ -54,7 +54,7 @@
             android:id="@+id/createaccount_et_passwordconfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm password"
+            android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:maxLines="1"/>
 
@@ -68,7 +68,7 @@
             android:id="@+id/createaccount_et_firstname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="First name"
+            android:hint="@string/first_name"
             android:inputType="text"
             android:maxLines="1"/>
 
@@ -82,7 +82,7 @@
             android:id="@+id/createaccount_et_lastname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Last name"
+            android:hint="@string/last_name"
             android:inputType="text"
             android:maxLines="1"/>
 

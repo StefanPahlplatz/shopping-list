@@ -1,4 +1,4 @@
-# ShoppingListV1
+# ShoppingList
 Shopping list android application
 
 Android application to keep track of your groceries.

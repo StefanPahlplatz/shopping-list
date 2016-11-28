@@ -37,7 +37,6 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter
         this.productsInList = productsInList;
         this.ctx = ctx;
 
-
         db = new Database(ctx.getResources().getString(R.string.ConnectionString)
                 , ctx.getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
     }

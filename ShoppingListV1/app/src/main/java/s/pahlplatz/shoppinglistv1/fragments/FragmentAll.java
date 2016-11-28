@@ -176,12 +176,15 @@ public class FragmentAll extends Fragment
                 db.removeProduct(listItemName);
 
                 // Remove item from client
-                productsInList.remove(productsInList.indexOf(allproducts.get(menuItemIndex)));
-                allproducts.remove(menuItemIndex);
+                productsInList.remove(productsInList.size() == 1
+                        ? 0
+                        : productsInList.indexOf(listItemName));
 
-                lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
+                allproducts.remove(allproducts.size() == 1
+                        ? 0
+                        : allproducts.indexOf(listItemName));
 
-
+                adapter.notifyDataSetChanged();
                 Toast.makeText(getActivity(), "Product deleted!", Toast.LENGTH_SHORT).show();
                 break;
             default:

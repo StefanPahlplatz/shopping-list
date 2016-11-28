@@ -176,9 +176,12 @@ public class FragmentAll extends Fragment
                 db.removeProduct(listItemName);
 
                 // Remove item from client
-                productsInList.remove(productsInList.size() == 1
-                        ? 0
-                        : productsInList.indexOf(listItemName));
+                try
+                {
+                    productsInList.remove(productsInList.size() == 1
+                            ? 0
+                            : productsInList.indexOf(listItemName));
+                } catch (Exception ex) {}
 
                 allproducts.remove(allproducts.size() == 1
                         ? 0

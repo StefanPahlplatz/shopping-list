@@ -88,9 +88,7 @@ public class FragmentAll extends Fragment
         if (v.getId() == R.id.lv_Products)
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
             menu.setHeaderTitle(allproducts.get(info.position));
-
             String[] menuItems = {"Rename", "Delete"};
 
             for (int i = 0; i < menuItems.length; i++)
@@ -170,7 +168,7 @@ public class FragmentAll extends Fragment
 
                 builder.show();
                 break;
-            // Verwijderen
+            // Delete
             case 1:
                 Log.d(TAG, "Selected Delete");
 
@@ -178,10 +176,18 @@ public class FragmentAll extends Fragment
                 db.removeProduct(listItemName);
 
                 // Remove item from client
-                allproducts.remove(menuItemIndex);
-                lv_Products.setAdapter(new AllProductsAdapter(allproducts, productsInList, getContext()));
+                try
+                {
+                    productsInList.remove(productsInList.size() == 1
+                            ? 0
+                            : productsInList.indexOf(listItemName));
+                } catch (Exception ex) {}
 
+                allproducts.remove(allproducts.size() == 1
+                        ? 0
+                        : allproducts.indexOf(listItemName));
 
+                adapter.notifyDataSetChanged();
                 Toast.makeText(getActivity(), "Product deleted!", Toast.LENGTH_SHORT).show();
                 break;
             default:

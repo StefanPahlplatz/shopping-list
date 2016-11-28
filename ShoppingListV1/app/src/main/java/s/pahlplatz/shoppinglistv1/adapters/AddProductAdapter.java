@@ -107,6 +107,8 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
                                 // Remove from client
                                 list.remove(position);
                                 count.remove(position);
+
+                                notifyDataSetChanged();
                             }
                         }
                     };

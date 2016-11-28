@@ -11,16 +11,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -87,6 +90,17 @@ public class FragmentAdd extends Fragment
 
         // Configure AutoCompleteTextView
         actv_Product = (AutoCompleteTextView) view.findViewById(R.id.add_product_autoCompleteTextView);
+        actv_Product.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
+            {
+                if (id == EditorInfo.IME_ACTION_DONE)
+                    addProduct();
+
+                return false;
+            }
+        });
         actv_Product.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -147,62 +161,67 @@ public class FragmentAdd extends Fragment
             @Override
             public void onClick(View v)
             {
-                // Input
-                String productTemp = actv_Product.getText().toString();
-                String product;
-
-                // Make first letter capital
-                try
-                {
-                    product = productTemp.substring(0, 1).toUpperCase() + productTemp.substring(1);
-                } catch (Exception e)
-                {
-                    Toast.makeText(getActivity(), "Invalid name!", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "onClick: Exception while making first character capital", e);
-                    return;
-                }
-
-                // Check if the product is already in the list
-                for (int i = 0; i < list.get(0).size(); i++)
-                {
-                    if (list.get(0).get(i).toString().toUpperCase()
-                            .contains(product.trim().toUpperCase()))
-                    {
-                        Toast.makeText(getActivity(), "Product is already in the list!"
-                                , Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-                // If the product is already in the database
-                if (productsNotInList.contains(product))
-                {
-                    db.updateIsInList(product);
-                } else
-                {
-                    // Add product to the database
-                    db.addProduct(product);
-                }
-
-                // Create custom lists
-                ArrayList<String> customProducts = list.get(0);
-                ArrayList<Integer> customCount = list.get(1);
-
-                // Add new item
-                customProducts.add(product);
-                customCount.add(1);
-
-                // Assign adapter
-                AddProductAdapter allProductsAdapter = new AddProductAdapter(customProducts,
-                        customCount, getContext());
-                lv_Products.setAdapter(allProductsAdapter);
-
-                Toast.makeText(getActivity(), "Added " + product + "!", Toast.LENGTH_SHORT).show();
-                actv_Product.setText("");
+                addProduct();
             }
         });
 
         return view;
+    }
+
+    private void addProduct()
+    {
+        // Input
+        String productTemp = actv_Product.getText().toString();
+        String product;
+
+        // Make first letter capital
+        try
+        {
+            product = productTemp.substring(0, 1).toUpperCase() + productTemp.substring(1);
+        } catch (Exception e)
+        {
+            Toast.makeText(getActivity(), "Invalid name!", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "onClick: Exception while making first character capital", e);
+            return;
+        }
+
+        // Check if the product is already in the list
+        for (int i = 0; i < list.get(0).size(); i++)
+        {
+            if (list.get(0).get(i).toString().toUpperCase()
+                    .contains(product.trim().toUpperCase()))
+            {
+                Toast.makeText(getActivity(), "Product is already in the list!"
+                        , Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        // If the product is already in the database
+        if (productsNotInList.contains(product))
+        {
+            db.updateIsInList(product);
+        } else
+        {
+            // Add product to the database
+            db.addProduct(product);
+        }
+
+        // Create custom lists
+        ArrayList<String> customProducts = list.get(0);
+        ArrayList<Integer> customCount = list.get(1);
+
+        // Add new item
+        customProducts.add(product);
+        customCount.add(1);
+
+        // Assign adapter
+        AddProductAdapter allProductsAdapter = new AddProductAdapter(customProducts,
+                customCount, getContext());
+        lv_Products.setAdapter(allProductsAdapter);
+
+        Toast.makeText(getActivity(), "Added " + product + "!", Toast.LENGTH_SHORT).show();
+        actv_Product.setText("");
     }
 
     @Override

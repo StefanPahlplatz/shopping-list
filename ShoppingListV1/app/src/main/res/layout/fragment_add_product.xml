@@ -18,6 +18,9 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/add_product_btn_add"
         android:layout_toStartOf="@+id/add_product_btn_add"
+        android:imeOptions="actionUnspecified"
+        android:inputType="textAutoComplete"
+        android:maxLines="1"
         android:hint="@string/hint"
         android:text=""/>
 

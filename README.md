@@ -8,6 +8,7 @@ https://play.google.com/store/apps/details?id=s.pahlplatz.shoppinglist
 - View your current list of products that you need.
 - View all products you ever added.
 - Delete products dynamiclly.
+- Multiple accounts.
 
 ## How to run:
 To run this application you need to:

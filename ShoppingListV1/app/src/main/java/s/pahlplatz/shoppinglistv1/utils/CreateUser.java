@@ -20,12 +20,11 @@ import s.pahlplatz.shoppinglistv1.R;
 
 /**
  * Created by Stefan on 23-11-2016.
- *
+ * <p>
  * Represents an asynchronous registration task used to create an account for the user.
  */
 
-public class CreateUser extends AsyncTask<String, String, String>
-{
+public class CreateUser extends AsyncTask<String, String, String> {
     private static final String TAG = CreateUser.class.getSimpleName();
 
     private String username;
@@ -39,8 +38,7 @@ public class CreateUser extends AsyncTask<String, String, String>
     private String response;
 
     public CreateUser(ArrayList<String> credentials, Context ctx, ProgressBar progressBar,
-                      Button btn_CreateAccount)
-    {
+                      Button btn_CreateAccount) {
         username = credentials.get(0);
         password = credentials.get(1);
         firstName = credentials.get(2);
@@ -52,31 +50,25 @@ public class CreateUser extends AsyncTask<String, String, String>
     }
 
     @Override
-    protected void onPreExecute()
-    {
+    protected void onPreExecute() {
     }
 
     @Override
-    protected void onCancelled(String r)
-    {
+    protected void onCancelled(String r) {
         progressBar.setVisibility(View.GONE);
         btn_CreateAccount.setEnabled(true);
         Toast.makeText(ctx, r, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    protected String doInBackground(String... params)
-    {
-        try
-        {
+    protected String doInBackground(String... params) {
+        try {
             ConnectionClass con = new ConnectionClass();
             Connection connection = con.CONN(ctx.getResources().getString(R.string.ConnectionString));
 
-            if (connection == null)
-            {
+            if (connection == null) {
                 response = "Error in connection with SQL server";
-            } else
-            {
+            } else {
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY).format(new Date());
 
                 // Query to run the CreateUser procedure in the server
@@ -95,23 +87,19 @@ public class CreateUser extends AsyncTask<String, String, String>
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
 
-                while (rs.next())
-                {
+                while (rs.next()) {
                     response = rs.getString(1);
 
                     // Switch for server response
-                    if (response.equals("Success"))
-                    {
+                    if (response.equals("Success")) {
                         isSuccess = true;
-                    } else
-                    {
+                    } else {
                         Log.wtf(TAG, "uhh... wtf? something wrong with sql server?");
                         isSuccess = false;
                     }
                 }
             }
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Log.e(TAG, "doInBackground: Couldn't create account", ex);
             isSuccess = false;
             response = "Exceptions";
@@ -121,16 +109,13 @@ public class CreateUser extends AsyncTask<String, String, String>
     }
 
     @Override
-    protected void onPostExecute(String r)
-    {
+    protected void onPostExecute(String r) {
         progressBar.setVisibility(View.GONE);
 
-        if (isSuccess)
-        {
+        if (isSuccess) {
             // Start login procedure
             new AuthUser(username, password, ctx, progressBar, btn_CreateAccount).execute();
-        } else
-        {
+        } else {
             btn_CreateAccount.setEnabled(true);
         }
     }

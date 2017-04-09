@@ -19,12 +19,11 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 /**
  * Created by Stefan on 22-11-2016.
- *
+ * <p>
  * Custom array adapter for FragmentAdd
  */
 
-public class AddProductAdapter extends BaseAdapter implements ListAdapter
-{
+public class AddProductAdapter extends BaseAdapter implements ListAdapter {
     private static final String TAG = AddProductAdapter.class.getSimpleName();
 
     private final Database db;
@@ -33,8 +32,7 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
     private ArrayList<Integer> count;
     private Context ctx;
 
-    public AddProductAdapter(ArrayList<String> products, ArrayList<Integer> count, Context ctx)
-    {
+    public AddProductAdapter(ArrayList<String> products, ArrayList<Integer> count, Context ctx) {
         this.list = products;
         this.count = count;
         this.ctx = ctx;
@@ -44,83 +42,70 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return list.size();
     }
 
     @Override
-    public Object getItem(int pos)
-    {
+    public Object getItem(int pos) {
         return list.get(pos);
     }
 
     @Override
-    public long getItemId(int pos)
-    {
+    public long getItemId(int pos) {
         return 0;
     }
 
     @SuppressLint("InflateParams")
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
 
-        if (view == null)
-        {
+        if (view == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.custom_listview_item, null);
         }
 
         // Display product
-        TextView tv_Product = (TextView)view.findViewById(R.id.list_item_string);
+        TextView tv_Product = (TextView) view.findViewById(R.id.list_item_string);
         tv_Product.setText(list.get(position));
 
         // Display Count
-        TextView tv_Count = (TextView)view.findViewById(R.id.list_item_count);
+        TextView tv_Count = (TextView) view.findViewById(R.id.list_item_count);
         tv_Count.setText(String.format(count.get(position).toString()));
 
         // Assign buttons
-        Button btn_Delete = (Button)view.findViewById(R.id.delete_btn);
-        Button btn_Add = (Button)view.findViewById(R.id.add_btn);
+        Button btn_Delete = (Button) view.findViewById(R.id.delete_btn);
+        Button btn_Add = (Button) view.findViewById(R.id.add_btn);
 
         // Decrease count / remove item
-        btn_Delete.setOnClickListener(new View.OnClickListener()
-        {
+        btn_Delete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(count.get(position) == 1)
-                {
+            public void onClick(View v) {
+                if (count.get(position) == 1) {
                     DialogInterface.OnClickListener dialogClickListener =
-                    new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            if (which == DialogInterface.BUTTON_POSITIVE)
-                            {
-                                // Remove from server
-                                db.updateIsInList(list.get(position));
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                                        // Remove from server
+                                        db.updateIsInList(list.get(position));
 
-                                // Remove from client
-                                list.remove(position);
-                                count.remove(position);
+                                        // Remove from client
+                                        list.remove(position);
+                                        count.remove(position);
 
-                                notifyDataSetChanged();
-                            }
-                        }
-                    };
+                                        notifyDataSetChanged();
+                                    }
+                                }
+                            };
 
                     // Show Yes/No dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                     builder.setMessage("Are you sure you want to remove " + list.get(position)
                             + "?").setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener).show();
-                }
-                else
-                {
+                } else {
                     // Adjust value in server
                     db.updateCount(list.get(position), false);
 
@@ -132,11 +117,9 @@ public class AddProductAdapter extends BaseAdapter implements ListAdapter
         });
 
         // Increment count
-        btn_Add.setOnClickListener(new View.OnClickListener()
-        {
+        btn_Add.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 // Adjust value in server
                 db.updateCount(list.get(position), true);
 

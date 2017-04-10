@@ -24,8 +24,7 @@ import s.pahlplatz.shoppinglistv1.utils.CreateUser;
  * Fragment for the registration of new accounts
  */
 
-public class FragmentCreateAccount extends Fragment
-{
+public class FragmentCreateAccount extends Fragment {
     private static final String TAG = FragmentLogin.class.getSimpleName();
 
     private EditText et_Username, et_Password, et_PasswordConfirm, et_FirstName, et_LastName;
@@ -33,14 +32,12 @@ public class FragmentCreateAccount extends Fragment
     private Button btn_CreateAccount;
 
     @Override
-    public void onCreate(Bundle savedInstance)
-    {
+    public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_account, container, false);
 
         // TODO: EditText added is not a TextInputEditText. Please switch to using that class instead.
@@ -56,11 +53,9 @@ public class FragmentCreateAccount extends Fragment
         progressBar.setVisibility(View.GONE);
 
         // Make the last EditText go button create the account too
-        et_LastName.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        et_LastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_NULL)
                     createAccount();
                 return false;
@@ -68,11 +63,9 @@ public class FragmentCreateAccount extends Fragment
         });
 
         // Button click
-        btn_CreateAccount.setOnClickListener(new View.OnClickListener()
-        {
+        btn_CreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 createAccount();
             }
         });
@@ -80,36 +73,28 @@ public class FragmentCreateAccount extends Fragment
         return view;
     }
 
-    private void createAccount()
-    {
+    private void createAccount() {
         // Check if the input is valid
-        if (et_Username.getText().toString().isEmpty())
-        {
+        if (et_Username.getText().toString().isEmpty()) {
             et_Username.setError("Please enter a username");
             et_Username.requestFocus();
-        } else if (et_Password.getText().toString().isEmpty())
-        {
+        } else if (et_Password.getText().toString().isEmpty()) {
 
             et_Password.setError("Please enter a password");
             et_Password.requestFocus();
-        } else if (et_PasswordConfirm.getText().toString().isEmpty())
-        {
+        } else if (et_PasswordConfirm.getText().toString().isEmpty()) {
             et_PasswordConfirm.setError("Please confirm your password");
             et_PasswordConfirm.requestFocus();
-        } else if (!et_Password.getText().toString().equals(et_PasswordConfirm.getText().toString()))
-        {
+        } else if (!et_Password.getText().toString().equals(et_PasswordConfirm.getText().toString())) {
             et_PasswordConfirm.setError("Passwords do not match");
             et_PasswordConfirm.requestFocus();
-        } else if (et_FirstName.getText().toString().isEmpty())
-        {
+        } else if (et_FirstName.getText().toString().isEmpty()) {
             et_FirstName.setError("Please enter your first name");
             et_FirstName.requestFocus();
-        } else if (et_LastName.getText().toString().isEmpty())
-        {
+        } else if (et_LastName.getText().toString().isEmpty()) {
             et_LastName.setError("Please enter your last name");
             et_LastName.requestFocus();
-        } else
-        {
+        } else {
             progressBar.setVisibility(View.VISIBLE);
             btn_CreateAccount.setEnabled(false);
 

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,12 +29,11 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 /**
  * Created by Stefan on 25-11-2016.
- *
+ * <p>
  * Fragment for checking your items
  */
 
-public class FragmentCheckList extends Fragment
-{
+public class FragmentCheckList extends Fragment {
     private static final String TAG = FragmentCheckList.class.getSimpleName();
 
     private Database db;
@@ -41,16 +41,15 @@ public class FragmentCheckList extends Fragment
     private ArrayList<ArrayList> list;
     private CheckListAdapter adapter;
     private SwipeRefreshLayout swipeContainer;
+    private ProgressBar progressBar;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checklist, container, false);
 
         db = new Database(getContext().getResources().getString(R.string.ConnectionString)
@@ -58,11 +57,9 @@ public class FragmentCheckList extends Fragment
 
         // Set up SwipeRefreshLayout
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
+            public void onRefresh() {
                 new PopulateListView().execute(getContext());
             }
         });
@@ -78,22 +75,19 @@ public class FragmentCheckList extends Fragment
         registerForContextMenu(lv_Products);
         new PopulateListView().execute(getContext());
 
+        progressBar = (ProgressBar) view.findViewById(R.id.checklist_pbar);
+
         // Configure ActionButton
         FloatingActionButton actionButton = (FloatingActionButton) view.findViewById(R.id.checklist_btn_Delete);
-        actionButton.setOnClickListener(new View.OnClickListener()
-        {
+        actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 ArrayList<Integer> itemsToDelete = adapter.getSelected();
 
-                if (itemsToDelete.size() == 0)
-                {
+                if (itemsToDelete.size() == 0) {
                     Toast.makeText(getContext(), "Select 1 or more products first", Toast.LENGTH_SHORT).show();
-                } else
-                {
-                    for (int i = itemsToDelete.size() - 1; i >= 0; i--)
-                    {
+                } else {
+                    for (int i = itemsToDelete.size() - 1; i >= 0; i--) {
                         int index = itemsToDelete.get(i);
 
                         // Update in server
@@ -119,11 +113,9 @@ public class FragmentCheckList extends Fragment
     }
 
     // Fill the ListView with data from the database
-    private class PopulateListView extends AsyncTask<Context, Void, CheckListAdapter>
-    {
+    private class PopulateListView extends AsyncTask<Context, Void, CheckListAdapter> {
         @SuppressWarnings("unchecked")
-        protected CheckListAdapter doInBackground(Context... params)
-        {
+        protected CheckListAdapter doInBackground(Context... params) {
             // Get context from param
             Context ctx = params[0];
 
@@ -131,17 +123,16 @@ public class FragmentCheckList extends Fragment
             list = db.getInfoCheckList();
 
             // Pass the adapter to onPostExecute
-            return new CheckListAdapter(list.get(0),list.get(1), list.get(2), ctx);
+            return new CheckListAdapter(list.get(0), list.get(1), list.get(2), ctx);
         }
 
-        protected void onPostExecute(CheckListAdapter param)
-        {
+        protected void onPostExecute(CheckListAdapter param) {
             // Assign the adapter
             adapter = param;
             lv_Products.setAdapter(adapter);
+            progressBar.setVisibility(View.GONE);
 
-            if(swipeContainer.isRefreshing())
-            {
+            if (swipeContainer.isRefreshing()) {
                 swipeContainer.setRefreshing(false);
             }
         }

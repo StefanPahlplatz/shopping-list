@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rl_allproducts_item"
-                android:longClickable="true">
+    android:id="@+id/rl_allproducts_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:longClickable="true">
     <!-- PRODUCT -->
     <TextView
         android:id="@+id/list_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:longClickable="true"
         android:paddingLeft="8dp"
+        android:text="item"
         android:textSize="18sp"
-        android:text="loltestotem"
-        android:textStyle="bold"
-        android:longClickable="true"/>
+        android:textStyle="bold" />
 
     <!-- REMOVE BUTTON -->
     <Button
         android:id="@+id/btn_AddItem"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:text="+"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
 </RelativeLayout>

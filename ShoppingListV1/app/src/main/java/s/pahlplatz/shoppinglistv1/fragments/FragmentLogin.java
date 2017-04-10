@@ -19,12 +19,11 @@ import s.pahlplatz.shoppinglistv1.utils.AuthUser;
 
 /**
  * Created by Stefan on 22-11-2016.
- *
+ * <p>
  * Fragment to log in to the users personal account.
  */
 
-public class FragmentLogin extends Fragment
-{
+public class FragmentLogin extends Fragment {
     private static final String TAG = FragmentLogin.class.getSimpleName();
 
     private TextInputLayout et_Username, et_Password;
@@ -32,14 +31,12 @@ public class FragmentLogin extends Fragment
     private Button btn_SignIn;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         et_Username = (TextInputLayout) view.findViewById(R.id.login_til_username);
@@ -50,29 +47,23 @@ public class FragmentLogin extends Fragment
 
         // Login button
         btn_SignIn = (Button) view.findViewById(R.id.login_btn_login);
-        btn_SignIn.setOnClickListener(new View.OnClickListener()
-        {
+        btn_SignIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 login();
             }
         });
 
         // Create new account
         Button btn_CreateAcc = (Button) view.findViewById(R.id.login_btn_create);
-        btn_CreateAcc.setOnClickListener(new View.OnClickListener()
-        {
+        btn_CreateAcc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 Class fragmentClass = FragmentCreateAccount.class;
                 Fragment fragment = null;
-                try
-                {
+                try {
                     fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Log.e(TAG, "onClick: Couldn't create fragment instance", ex);
                 }
 
@@ -86,13 +77,10 @@ public class FragmentLogin extends Fragment
 
         // Set appropriate button for password keyboard
         //noinspection ConstantConditions
-        et_Password.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        et_Password.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
-            {
-                if (id == R.id.login || id == EditorInfo.IME_NULL)
-                {
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     login();
                     return true;
                 }
@@ -102,19 +90,15 @@ public class FragmentLogin extends Fragment
         return view;
     }
 
-    private void login()
-    {
+    private void login() {
         // Verify credentials
-        if (et_Username.getEditText().getText().toString().isEmpty())
-        {
+        if (et_Username.getEditText().getText().toString().isEmpty()) {
             et_Username.getEditText().setError("Please enter your group name");
             et_Username.requestFocus();
-        } else if (et_Password.getEditText().getText().toString().isEmpty())
-        {
+        } else if (et_Password.getEditText().getText().toString().isEmpty()) {
             et_Password.getEditText().setError("Please enter your password");
             et_Password.requestFocus();
-        } else
-        {
+        } else {
             progressBar.setVisibility(View.VISIBLE);
             btn_SignIn.setEnabled(false);
 

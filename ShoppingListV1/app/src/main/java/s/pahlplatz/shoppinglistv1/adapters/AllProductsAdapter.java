@@ -24,13 +24,15 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
  * Custom array adapter to display all items that the user ever entered
  */
 
-public class AllProductsAdapter extends BaseAdapter implements ListAdapter {
+public class AllProductsAdapter extends BaseAdapter implements ListAdapter
+{
     private final Context ctx;
     private final Database db;
     private ArrayList<String> allproducts;
     private ArrayList<String> productsInList;
 
-    public AllProductsAdapter(ArrayList<String> allproducts, ArrayList<String> productsInList, Context ctx) {
+    public AllProductsAdapter(ArrayList<String> allproducts, ArrayList<String> productsInList, Context ctx)
+    {
         this.allproducts = allproducts;
         this.productsInList = productsInList;
         this.ctx = ctx;
@@ -40,24 +42,29 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return allproducts.size();
     }
 
     @Override
-    public Object getItem(int pos) {
+    public Object getItem(int pos)
+    {
         return allproducts.get(pos);
     }
 
     @Override
-    public long getItemId(int pos) {
+    public long getItemId(int pos)
+    {
         return 0;
     }
 
     @SuppressLint("InflateParams")
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
+    public View getView(final int position, View convertView, ViewGroup parent)
+    {
+        if (convertView == null)
+        {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.custom_listview_allproducts, null);
         }
@@ -70,16 +77,20 @@ public class AllProductsAdapter extends BaseAdapter implements ListAdapter {
         final RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.rl_allproducts_item);
 
         // If the product is in the current list
-        if (productsInList.contains(allproducts.get(position))) {
+        if (productsInList.contains(allproducts.get(position)))
+        {
             rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAlreadyInList));
             btn_Add.setVisibility(View.INVISIBLE);
-        } else {
+        } else
+        {
             rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorNotInList));
             btn_Add.setVisibility(View.VISIBLE);
 
-            btn_Add.setOnClickListener(new View.OnClickListener() {
+            btn_Add.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     rl.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAlreadyInList));
                     btn_Add.setVisibility(View.INVISIBLE);
                     db.updateIsInList(allproducts.get(position));

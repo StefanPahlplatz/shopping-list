@@ -18,12 +18,13 @@ import s.pahlplatz.shoppinglistv1.activities.MainActivity;
 
 /**
  * Created by Stefan on 23-11-2016.
- * <p>
+ *
  * Represents an asynchronous login task used to authenticate
  * the user.
  */
 
-public class AuthUser extends AsyncTask<String, String, String> {
+public class AuthUser extends AsyncTask<String, String, String>
+{
     private static final String TAG = AuthUser.class.getSimpleName();
 
     private String response = "";
@@ -36,7 +37,8 @@ public class AuthUser extends AsyncTask<String, String, String> {
     private Button btn_Login;
 
     public AuthUser(String username, String password, Context ctx, ProgressBar progressBar,
-                    Button btn_Login) {
+                    Button btn_Login)
+    {
         this.username = username;
         this.password = password;
         this.ctx = ctx;
@@ -45,29 +47,37 @@ public class AuthUser extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPreExecute() {
+    protected void onPreExecute()
+    {
     }
 
     @Override
-    protected void onCancelled(String r) {
+    protected void onCancelled(String r)
+    {
         progressBar.setVisibility(View.GONE);
         btn_Login.setEnabled(true);
         Toast.makeText(ctx, r, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected String doInBackground(String... params)
+    {
         // Check if the username and password are valid
-        if (username.trim().equals("") || password.trim().equals("")) {
+        if (username.trim().equals("") || password.trim().equals(""))
+        {
             response = "Please enter username and password first";
-        } else {
-            try {
+        } else
+        {
+            try
+            {
                 ConnectionClass con = new ConnectionClass();
                 Connection connection = con.CONN(ctx.getResources().getString(R.string.ConnectionString));
 
-                if (connection == null) {
+                if (connection == null)
+                {
                     response = "Error in connection with SQL server";
-                } else {
+                } else
+                {
                     // Query to run the Login procedure in the server
                     String query = "DECLARE	@responseMessage nvarchar(250)" +
                             "EXEC dbo.uspLogin " +
@@ -79,10 +89,12 @@ public class AuthUser extends AsyncTask<String, String, String> {
                     Statement stmt = connection.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
 
-                    while (rs.next()) {
+                    while (rs.next())
+                    {
                         response = rs.getString(1);
 
-                        switch (response) {
+                        switch (response)
+                        {
                             case "Invalid login":
                             case "Incorrect password":
                                 isSuccess = false;
@@ -97,7 +109,8 @@ public class AuthUser extends AsyncTask<String, String, String> {
                         }
                     }
                 }
-            } catch (Exception ex) {
+            } catch (Exception ex)
+            {
                 Log.e(TAG, "doInBackground: Couldn't log in", ex);
                 isSuccess = false;
                 response = "Exceptions";
@@ -107,15 +120,18 @@ public class AuthUser extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String r) {
+    protected void onPostExecute(String r)
+    {
         progressBar.setVisibility(View.GONE);
 
-        if (isSuccess) {
+        if (isSuccess)
+        {
             // Create main activity
             Intent mainIntent = new Intent(ctx, MainActivity.class);
             mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             ctx.startActivity(mainIntent);
-        } else {
+        } else
+        {
             btn_Login.setEnabled(true);
             Toast.makeText(ctx, "Couldn't log in!", Toast.LENGTH_SHORT).show();
         }

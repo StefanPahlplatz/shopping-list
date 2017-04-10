@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="s.pahlplatz.shoppinglistv1.activities.MainActivity">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="s.pahlplatz.shoppinglistv1.activities.MainActivity">
 
-    <include layout="@layout/swiperefresh_listview" />
+    <include layout="@layout/swiperefresh_listview"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/checklist_btn_Delete"
@@ -17,15 +17,6 @@
         android:layout_margin="16dp"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
-
-    <ProgressBar
-        android:id="@+id/checklist_pbar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="200dp" />
+        app:srcCompat="@android:drawable/ic_menu_delete"/>
 
 </RelativeLayout>

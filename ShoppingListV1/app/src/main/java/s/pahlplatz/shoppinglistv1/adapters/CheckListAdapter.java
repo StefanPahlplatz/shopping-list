@@ -22,11 +22,12 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
 
 /**
  * Created by Stefan on 25-11-2016.
- * <p>
+ *
  * Adapter for checking your items
  */
 
-public class CheckListAdapter extends BaseAdapter implements ListAdapter {
+public class CheckListAdapter extends BaseAdapter implements ListAdapter
+{
     private static final String TAG = CheckListAdapter.class.getSimpleName();
 
     private ArrayList<String> products = new ArrayList<>();
@@ -36,7 +37,8 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter {
     private Database db;
 
     public CheckListAdapter(ArrayList<String> products, ArrayList<Integer> count
-            , ArrayList<Integer> checked, Context ctx) {
+            , ArrayList<Integer> checked, Context ctx)
+    {
         this.products = products;
         this.count = count;
         this.checked = checked;
@@ -47,24 +49,29 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return products.size();
     }
 
     @Override
-    public Object getItem(int pos) {
+    public Object getItem(int pos)
+    {
         return products.get(pos);
     }
 
     @Override
-    public long getItemId(int pos) {
+    public long getItemId(int pos)
+    {
         return 0;
     }
 
     @SuppressLint("InflateParams")
     @Override
-    public View getView(final int position, View view, ViewGroup parent) {
-        if (view == null) {
+    public View getView(final int position, View view, ViewGroup parent)
+    {
+        if (view == null)
+        {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.custom_listview_checklist, null);
         }
@@ -86,30 +93,37 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter {
                 : ContextCompat.getColor(ctx, R.color.colorNotInList));
 
         // Clicking anywhere in the relativelayout will trigger the checkbox click
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        checkBox.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                updateState(position, relativeLayout, checkBox);
-                ;
+            public void onClick(View v)
+            {
+                updateState(position, relativeLayout, checkBox);;
             }
         });
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
+        relativeLayout.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 checkBox.setChecked(!checkBox.isChecked());
                 updateState(position, relativeLayout, checkBox);
             }
         });
-        listItemText.setOnClickListener(new View.OnClickListener() {
+        listItemText.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 checkBox.setChecked(!checkBox.isChecked());
                 updateState(position, relativeLayout, checkBox);
             }
         });
-        listItemCount.setOnClickListener(new View.OnClickListener() {
+        listItemCount.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 checkBox.setChecked(!checkBox.isChecked());
                 updateState(position, relativeLayout, checkBox);
             }
@@ -118,7 +132,8 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter {
         return view;
     }
 
-    private void updateState(int position, RelativeLayout relativeLayout, CheckBox checkBox) {
+    private void updateState(int position, RelativeLayout relativeLayout, CheckBox checkBox)
+    {
         // Update checked state in server
         db.updateCheckedState(products.get(position));
         checked.set(position, checked.get(position) == 1 ? 0 : 1);
@@ -129,10 +144,13 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter {
                 : ContextCompat.getColor(ctx, R.color.colorNotInList));
     }
 
-    public ArrayList<Integer> getSelected() {
+    public ArrayList<Integer> getSelected()
+    {
         ArrayList<Integer> retList = new ArrayList<>();
-        for (int i = 0; i < checked.size(); i++) {
-            if (checked.get(i) == 1) {
+        for (int i = 0; i < checked.size(); i++)
+        {
+            if (checked.get(i) == 1)
+            {
                 retList.add(i);
             }
         }

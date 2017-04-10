@@ -9,26 +9,31 @@ import java.sql.DriverManager;
 
 /**
  * Created by Stefan on 22-11-2016.
- * <p>
+ *
  * Class to help the database make a connection by creating the connection here and then
  * passing it to the database class.
  */
 
-public class ConnectionClass {
+public class ConnectionClass
+{
     private static final String TAG = ConnectionClass.class.getSimpleName();
 
     @SuppressLint("NewApi")
-    public Connection CONN(String conString) {
+    public Connection CONN(String conString)
+    {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         Connection conn = null;
 
-        try {
+        try
+        {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
             conn = DriverManager.getConnection(conString);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Log.e(TAG, ex.getMessage());
         }
 

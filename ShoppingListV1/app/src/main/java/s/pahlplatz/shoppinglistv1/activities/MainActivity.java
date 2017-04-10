@@ -29,12 +29,14 @@ import s.pahlplatz.shoppinglistv1.fragments.FragmentCheckList;
 import s.pahlplatz.shoppinglistv1.utils.Database;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener
+{
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private boolean doubleBackToExitPressedOnce = false;
 
-    private static void hideKeyboard(Context ctx) {
+    private static void hideKeyboard(Context ctx)
+    {
         InputMethodManager inputManager = (InputMethodManager) ctx
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -47,31 +49,38 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         // Initialize activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSharedPreferences("settings", MODE_PRIVATE).getInt("userid", -1) == -1) {
+        if (getSharedPreferences("settings", MODE_PRIVATE).getInt("userid", -1) == -1)
+        {
             // Create login activity
             Intent loginIntent = new Intent(this, LoginActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
             this.finish();
-        } else {
-            if (getSharedPreferences("settings", MODE_PRIVATE).getString("name", "").equals("")) {
+        } else
+        {
+            if (getSharedPreferences("settings", MODE_PRIVATE).getString("name", "").equals(""))
+            {
                 new GetName().execute();
             }
 
             // Load fragment
-            if (savedInstanceState == null) {
+            if (savedInstanceState == null)
+            {
                 Fragment fragment = null;
                 Class fragmentClass;
                 fragmentClass = FragmentAdd.class;
 
-                try {
+                try
+                {
                     fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     e.printStackTrace();
                 }
 
@@ -98,11 +107,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else
+        {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
@@ -111,9 +124,11 @@ public class MainActivity extends AppCompatActivity
             doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(new Runnable() {
+            new Handler().postDelayed(new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
@@ -121,17 +136,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.defaultmenu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             // Create login activity
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -142,12 +160,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
+    {
         hideKeyboard(this);
         Fragment fragment;
         Class fragmentClass = null;
 
-        switch (item.getItemId()) {
+        switch(item.getItemId())
+        {
             case R.id.nav_add:
                 fragmentClass = FragmentAdd.class;
                 break;
@@ -163,15 +183,19 @@ public class MainActivity extends AppCompatActivity
                 startActivity(settingsIntent);
                 break;
         }
-        try {
-            if (fragmentClass != null) {
+        try
+        {
+            if (fragmentClass != null)
+            {
                 fragment = (Fragment) fragmentClass.newInstance();
 
                 // Switch fragment
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Log.e(TAG, "onNavigationItemSelected: Couldn't create fragment", ex);
         }
 
@@ -183,8 +207,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Fill the ListView with data from the database
-    private class GetName extends AsyncTask<Void, Void, String> {
-        protected String doInBackground(Void... params) {
+    private class GetName extends AsyncTask<Void, Void, String>
+    {
+        protected String doInBackground(Void... params)
+        {
             Database db = new Database(getString(R.string.ConnectionString)
                     , getSharedPreferences("settings", Context.MODE_PRIVATE).getInt("userid", -1));
 
@@ -193,7 +219,8 @@ public class MainActivity extends AppCompatActivity
             return name;
         }
 
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(String result)
+        {
             getSharedPreferences("settings", Context.MODE_PRIVATE)
                     .edit()
                     .putString("name", result)

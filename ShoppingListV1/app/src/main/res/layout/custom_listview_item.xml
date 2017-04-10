@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
     <!-- PRODUCT -->
     <TextView
         android:id="@+id/list_item_string"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
         android:paddingLeft="8dp"
-        android:text="loltestotem"
         android:textSize="18sp"
+        android:text="loltestotem"
         android:textStyle="bold" />
 
     <!-- ADD BUTTON -->
@@ -19,35 +19,36 @@
         android:id="@+id/add_btn"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:layout_toLeftOf="@+id/delete_btn"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/delete_btn"
         android:text="+"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <!-- COUNT -->
     <TextView
         android:id="@+id/list_item_count"
+        android:text="11"
+        android:textAlignment="center"
+        android:layout_marginRight="12dp"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/list_item_string"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
         android:layout_toLeftOf="@+id/add_btn"
         android:layout_toStartOf="@+id/add_btn"
-        android:text="11"
-        android:textAlignment="center" />
+        android:layout_marginEnd="12dp"
+        android:layout_centerVertical="true"
+        />
 
     <!-- MINUS BUTTON -->
     <Button
         android:id="@+id/delete_btn"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:text="-"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
 </RelativeLayout>

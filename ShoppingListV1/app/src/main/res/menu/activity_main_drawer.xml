@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/first_group"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/first_group">
         <item
             android:id="@+id/nav_add"
             android:icon="@drawable/ic_add_shopping_cart_black_24dp"
-            android:title="@string/add_product" />
+            android:title="@string/add_product"/>
         <item
             android:id="@+id/nav_allproducts"
             android:icon="@drawable/ic_list_black_24dp"
-            android:title="@string/view_all_products" />
+            android:title="@string/view_all_products"/>
         <item
             android:id="@+id/nav_list"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
-            android:title="@string/view_current_list" />
+            android:title="@string/view_current_list"/>
     </group>
 
-    <group
-        android:id="@+id/second_group"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/second_group">
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/settings" />
+            android:title="@string/settings"/>
     </group>
 
 </menu>

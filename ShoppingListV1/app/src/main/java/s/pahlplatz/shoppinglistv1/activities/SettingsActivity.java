@@ -30,31 +30,37 @@ import s.pahlplatz.shoppinglistv1.R;
 
 import java.util.List;
 
-public class SettingsActivity extends AppCompatPreferenceActivity {
+public class SettingsActivity extends AppCompatPreferenceActivity
+{
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener
-            = new Preference.OnPreferenceChangeListener() {
+            = new Preference.OnPreferenceChangeListener()
+    {
         @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
+        public boolean onPreferenceChange(Preference preference, Object value)
+        {
             String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
+            if (preference instanceof ListPreference)
+            {
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
-            } else {
+            } else
+            {
                 preference.setSummary(stringValue);
             }
             return true;
         }
     };
 
-    private static boolean isXLargeTablet(Context context) {
+    private static boolean isXLargeTablet(Context context)
+    {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
@@ -68,7 +74,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private static void bindPreferenceSummaryToValue(Preference preference)
+    {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -81,24 +88,30 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setupActionBar();
     }
 
-    private void setupActionBar() {
+    private void setupActionBar()
+    {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if (actionBar != null)
+        {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, MenuItem item)
+    {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            if (!super.onMenuItemSelected(featureId, item)) {
+        if (id == android.R.id.home)
+        {
+            if (!super.onMenuItemSelected(featureId, item))
+            {
                 NavUtils.navigateUpFromSameTask(this);
             }
             return true;
@@ -107,16 +120,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    public boolean onIsMultiPane() {
+    public boolean onIsMultiPane()
+    {
         return isXLargeTablet(this);
     }
 
     @Override
-    public void onBuildHeaders(List<Header> target) {
+    public void onBuildHeaders(List<Header> target)
+    {
         loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
-    protected boolean isValidFragment(String fragmentName) {
+    protected boolean isValidFragment(String fragmentName)
+    {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || AccountPreferenceFragment.class.getName().equals(fragmentName);
@@ -125,9 +141,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     /*
      *  GENERAL FRAGMENT
      */
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static class GeneralPreferenceFragment extends PreferenceFragment
+    {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(Bundle savedInstanceState)
+        {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
@@ -140,9 +158,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
+        public boolean onOptionsItemSelected(MenuItem item)
+        {
             int id = item.getItemId();
-            if (id == android.R.id.home) {
+            if (id == android.R.id.home)
+            {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }
@@ -153,24 +173,31 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     /*
      *  ACCOUNT FRAGMENT
      */
-    public static class AccountPreferenceFragment extends PreferenceFragment {
+    public static class AccountPreferenceFragment extends PreferenceFragment
+    {
         private static final String TAG = AccountPreferenceFragment.class.getSimpleName();
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(Bundle savedInstanceState)
+        {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_account);
             setHasOptionsMenu(true);
 
             Preference logout = findPreference("logout");
             logout.setSummary("Logged in as " + getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).getString("name", ""));
-            logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
                 @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener()
+                    {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == DialogInterface.BUTTON_POSITIVE) {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            if (which ==  DialogInterface.BUTTON_POSITIVE)
+                            {
                                 // Remove userid and name from SharedPreferences
                                 getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
                                         .edit()
@@ -187,9 +214,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         }
                     };
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("Are you sure you want to log out?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure you want to log out?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
 
                     return true;
                 }
@@ -197,9 +224,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
+        public boolean onOptionsItemSelected(MenuItem item)
+        {
             int id = item.getItemId();
-            if (id == android.R.id.home) {
+            if (id == android.R.id.home)
+            {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             }

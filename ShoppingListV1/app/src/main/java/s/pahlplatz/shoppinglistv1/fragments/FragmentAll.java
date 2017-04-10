@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -33,7 +32,8 @@ import s.pahlplatz.shoppinglistv1.utils.Database;
  * Fragment for showing all the products that the user ever entered.
  */
 
-public class FragmentAll extends Fragment {
+public class FragmentAll extends Fragment
+{
     private static final String TAG = FragmentAll.class.getSimpleName();
 
     private ArrayList<String> allproducts;
@@ -42,10 +42,10 @@ public class FragmentAll extends Fragment {
     private ListView lv_Products;
     private Database db;
     private AllProductsAdapter adapter;
-    private ProgressBar progressBar;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         // Assign database
@@ -54,7 +54,8 @@ public class FragmentAll extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.fragment_all_products, container, false);
 
         // Configure ListView
@@ -63,13 +64,13 @@ public class FragmentAll extends Fragment {
         registerForContextMenu(lv_Products);
         new PopulateListView().execute(getContext());
 
-        progressBar = (ProgressBar) view.findViewById(R.id.all_products_pbar);
-
         // Configure the SwipeRefreshLayout
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
             @Override
-            public void onRefresh() {
+            public void onRefresh()
+            {
                 new PopulateListView().execute(getContext());
             }
         });
@@ -82,20 +83,24 @@ public class FragmentAll extends Fragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.lv_Products) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        if (v.getId() == R.id.lv_Products)
+        {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             menu.setHeaderTitle(allproducts.get(info.position));
             String[] menuItems = {"Rename", "Delete"};
 
-            for (int i = 0; i < menuItems.length; i++) {
+            for (int i = 0; i < menuItems.length; i++)
+            {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
             }
         }
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(MenuItem item)
+    {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         int menuItemIndex = item.getItemId();
@@ -103,7 +108,8 @@ public class FragmentAll extends Fragment {
         String menuItemName = menuItems[menuItemIndex];
         final String listItemName = allproducts.get(info.position);
 
-        switch (menuItemIndex) {
+        switch (menuItemIndex)
+        {
             // Rename
             case 0:
                 Log.d(TAG, "Selected Rename, item: " + listItemName);
@@ -121,14 +127,18 @@ public class FragmentAll extends Fragment {
                 builder.setView(input);
 
                 // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         String m_Text = input.getText().toString();
 
                         // Check if new name is already in the current list
-                        for (int i = 0; i < lv_Products.getCount(); i++) {
-                            if (input.toString().toUpperCase().equals(listItemName.toUpperCase())) {
+                        for (int i = 0; i < lv_Products.getCount(); i++)
+                        {
+                            if (input.toString().toUpperCase().equals(listItemName.toUpperCase()))
+                            {
                                 // Product is already in main list
                                 Toast.makeText(getActivity(), "Product is already in the list!"
                                         , Toast.LENGTH_SHORT).show();
@@ -147,9 +157,11 @@ public class FragmentAll extends Fragment {
                         Toast.makeText(getActivity(), "Product renamed!", Toast.LENGTH_SHORT).show();
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         dialog.cancel();
                     }
                 });
@@ -164,12 +176,12 @@ public class FragmentAll extends Fragment {
                 db.removeProduct(listItemName);
 
                 // Remove item from client
-                try {
+                try
+                {
                     productsInList.remove(productsInList.size() == 1
                             ? 0
                             : productsInList.indexOf(listItemName));
-                } catch (Exception ex) {
-                }
+                } catch (Exception ex) {}
 
                 allproducts.remove(allproducts.size() == 1
                         ? 0
@@ -184,8 +196,10 @@ public class FragmentAll extends Fragment {
         return true;
     }
 
-    private class PopulateListView extends AsyncTask<Context, Void, AllProductsAdapter> {
-        protected AllProductsAdapter doInBackground(Context... params) {
+    private class PopulateListView extends AsyncTask<Context, Void, AllProductsAdapter>
+    {
+        protected AllProductsAdapter doInBackground(Context... params)
+        {
             // Get context from param
             Context context = params[0];
 
@@ -197,14 +211,15 @@ public class FragmentAll extends Fragment {
             return new AllProductsAdapter(allproducts, productsInList, context);
         }
 
-        protected void onPostExecute(AllProductsAdapter param) {
+        protected void onPostExecute(AllProductsAdapter param)
+        {
             // Assign the adapter
             lv_Products.setAdapter(param);
 
             adapter = param;
-            progressBar.setVisibility(View.GONE);
 
-            if (swipeContainer.isRefreshing()) {
+            if (swipeContainer.isRefreshing())
+            {
                 swipeContainer.setRefreshing(false);
             }
         }

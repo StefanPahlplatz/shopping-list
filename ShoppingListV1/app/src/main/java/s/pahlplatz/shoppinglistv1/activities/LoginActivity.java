@@ -7,22 +7,27 @@ import android.support.v7.app.AppCompatActivity;
 import s.pahlplatz.shoppinglistv1.R;
 import s.pahlplatz.shoppinglistv1.fragments.FragmentLogin;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         // Load fragment
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
+        {
             Fragment fragment = null;
             Class fragmentClass;
             fragmentClass = FragmentLogin.class;
 
-            try {
+            try
+            {
                 fragment = (Fragment) fragmentClass.newInstance();
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 e.printStackTrace();
             }
 

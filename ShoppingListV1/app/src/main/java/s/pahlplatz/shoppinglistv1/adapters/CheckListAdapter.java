@@ -90,7 +90,6 @@ public class CheckListAdapter extends BaseAdapter implements ListAdapter {
             @Override
             public void onClick(View v) {
                 updateState(position, relativeLayout, checkBox);
-                ;
             }
         });
         relativeLayout.setOnClickListener(new View.OnClickListener() {
